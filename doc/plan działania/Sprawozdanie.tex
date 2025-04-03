@@ -1,0 +1,346 @@
+\documentclass[12pt,titlepage]{article}
+
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    total={210mm,2817mm},
+    left=20mm,
+    right=20mm,
+    top=20mm,
+    bottom=20mm,
+}
+
+\usepackage{pdflscape}
+\usepackage[]{subcaption}
+\usepackage{rotating}
+
+
+% Polski
+\usepackage[]{polski} 
+\usepackage[polish]{babel}
+
+%do tabel
+\usepackage{multirow}
+
+% ????
+\usepackage{xcolor}
+\usepackage{listings}
+
+
+% Pierwszy akapit - wcięty
+\usepackage[]{indentfirst}
+
+% Matematyka
+\usepackage[]{amsfonts}
+
+\usepackage[]{amsmath}
+
+% Formatowanie
+\usepackage{ragged2e}
+
+
+% <=
+\usepackage{amssymb}
+
+% eps
+\usepackage{graphicx}
+% \usepackage{subfigure}
+
+% Tabele
+\usepackage{array}
+
+\usepackage[style=czech]{csquotes}
+
+\renewcommand*{\thesubsubsection}{}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+\usepackage[numbered]{matlab-prettifier}
+\lstset{
+    literate={ą}{{\k{a}}}1
+             {Ą}{{\k{A}}}1
+             {ę}{{\k{e}}}1
+             {Ę}{{\k{E}}}1
+             {ó}{{\'o}}1
+             {Ó}{{\'O}}1
+             {ś}{{\'s}}1
+             {Ś}{{\'S}}1
+             {ł}{{\l{}}}1
+             {Ł}{{\L{}}}1
+             {ż}{{\.z}}1
+             {Ż}{{\.Z}}1
+             {ź}{{\'z}}1
+             {Ź}{{\'Z}}1
+             {ć}{{\'c}}1
+             {Ć}{{\'C}}1
+             {ń}{{\'n}}1
+             {Ń}{{\'N}}1,
+    language=Go,                % Ustawienie języka na Go
+    basicstyle=\ttfamily\small, % Czcionka monospaced, mniejszy rozmiar
+    keywordstyle=\color{blue}\bfseries, % Kolor słów kluczowych
+    commentstyle=\color{gray},          % Kolor komentarzy
+    stringstyle=\color{red},            % Kolor tekstu w cudzysłowach
+    numbers=left,                       % Numeracja linii po lewej
+    numberstyle=\tiny\color{gray},      % Styl numerów linii
+    stepnumber=1,                       % Co ile numerować linie
+    numbersep=5pt,                      % Odległość numerów od kodu
+    showstringspaces=false,             % Ukrycie spacji w stringach
+    tabsize=4,                          % Rozmiar tabulatora
+    breaklines=true,                    % Zawijanie linii
+    frame=single,                       % Ramka wokół kodu
+    backgroundcolor=\color{white},      % Kolor tła
+}
+
+\title{
+\includegraphics[scale=0.75]{img/politechnika_sl_logo_bw_poziom_pl-eps-converted-to.pdf}\\
+\textbf{Wydział Automatyki, Elektroniki\\
+i Informatyki}\\
+\vspace*{1cm}
+Praca Magisterksa \\ Plan działania \\ 	Zastosowanie metod sztucznej inteligencji do detekcji arytmii na podstawie sygnałów PPG 
+
+\vspace*{5cm}
+}
+\author{
+Jakub Kula\\
+} 
+\date{Gliwice 2025}
+
+\begin{document}
+
+\maketitle
+
+
+
+\newpage
+Przygotowałem krótki dokument, w którym przedstawiam swoje założenia dotyczące części projektowo-badawczej, aby upewnić się, że są one zgodne z Pańskimi oczekiwaniami.
+\section{Wybrane bazy danych}
+\begin{itemize}
+    \item \href{https://ppg-beats.readthedocs.io/en/latest/datasets/mimic_perform_af/}{\underline{MIMIC PERform AF Dataset}}
+    \item \href{https://github.com/zdzdliu/PPGArrhythmiaDetection}{\underline{Multiclass Arrhythmia Detection and Classification(...)}}
+    \item Dane wygenerowane dzięki \href{https://physionet.org/content/ecg-ppg-simulator-arrhythmia/1.3.1/}{\underline{Symulatorzes sygnału PPG z epizodami arrhythmia}}
+\end{itemize}
+\section{Wybrane cechy}
+Dla celów badawczych zostały wybrand 30 cech. Niektóre z nich mogą okazać się nadmiarowe, więc praca w kolejnych krokach będzie zmniejszach ich ilość wybierajać te najważniejsze przy pomocy funkcji "SelectKBest" z sklearn lub/i innych metod wyjaśnialnej sztucznej inteligencji. Sprawdzane opcje to 30-25-20-15-10.\\ Nie jestem pewny poprawności naz cech - opracowywałem je z przy pomocy \\
+\href{https://www.researchgate.net/figure/List-of-features-extracted-from-the-PPG-signal-that-is-used-for-AF-detection_tbl2_338598269}{\underline{List of features extracted from the PPG signal that is used for AF detection.}}
+
+\begin{itemize}
+    \item \textbf{1. Średnia}  
+    \[
+    \overline{x} = \frac{1}{N} \sum_{i=1}^{N} x_i
+    \]
+    Gdzie:  
+    - \( x_i \) – wartość \( i \)-tej próbki sygnału,  
+    - \( N \) – liczba próbek.
+
+    \item \textbf{2. Mediana }  
+    \item \textbf{3. Odchylenie standardowe ($\sigma$)}  
+    \[
+    \sigma = \sqrt{\frac{1}{N} \sum_{i=1}^{N} (x_i - \overline{x})^2}
+    \]
+
+    \item \textbf{4. Wariancja ($\text{var}$)}  
+    \[
+    \text{var} = \sigma^2
+    \]
+
+    \item \textbf{5. Rozstęp międzykwartylowy ($\text{iqr}$)}  
+    \[
+    \text{iqr} = Q_3 - Q_1
+    \]
+    Gdzie:  
+    - \( Q_1 \) – pierwszy kwartyl,  
+    - \( Q_3 \) – trzeci kwartyl.
+
+    \item \textbf{6. Maksimum}  
+
+    \item \textbf{7. Minimum}  
+
+
+    \item \textbf{8. Średnia wartość modułu różnic }  
+    \[
+    \overline{|\text{diff}|} = \frac{1}{N-1} \sum_{i=1}^{N-1} |x_{i+1} - x_i|
+    \]
+
+    \item \textbf{9. Procent różnic dodatnich}  
+    \[
+    \frac{100 \sum_{i=1}^{N-1} \mathbb{I}((x_{i+1} - x_i) > 0)}{N-1}
+    \]
+    Gdzie:  
+    - \( \mathbb{I}(\cdot) \) – funkcja indykatorowa (1 jeśli warunek jest spełniony, 0 w przeciwnym przypadku).
+
+    \item \textbf{10. RMS różnic ($\text{RMSSD}$)}  
+    \[
+    \text{RMSSD} = \sqrt{\frac{1}{N-1} \sum_{i=1}^{N-1} (x_{i+1} - x_i)^2}
+    \]
+
+    \item \textbf{11. Średnie odchylenie absolutne}  
+    \[
+    \text{mad} = \frac{1}{N} \sum_{i=1}^{N} |x_i - \overline{x}|
+    \]
+
+    \item \textbf{12. Energia}  
+    \[
+    \sum_{i=1}^{N} x_i^2
+    \]
+
+    \item \textbf{13. Skośność ($\text{skewness}$)}  
+    \[
+    \text{skewness} = \frac{\frac{1}{N} \sum_{i=1}^{N} (x_i - \overline{x})^3}{\sigma^3}
+    \]
+
+    \item \textbf{14. Entropia Shannona ($\text{wentropy}$)}  
+    \[
+    \text{wentropy} = -\sum_{i=1}^{N} p(x_i) \log p(x_i)
+    \]
+    Gdzie:  
+    - \( p(x_i) \) – prawdopodobieństwo wystąpienia wartości \( x_i \).
+
+    \item \textbf{15. Szczyt widmowy}  
+    \[
+    \text{maximal spectral peak} = \arg\max_f P_{xx}(f)
+    \]
+    Gdzie:  
+    - \( P_{xx}(f) \) – moc widmowa dla częstotliwości \( f \).
+
+    \item \textbf{16. Średnia mocy widmowej}  
+    \[
+    \overline{P_{xx}} = \frac{1}{M} \sum_{j=1}^{M} P_{xx}(f_j)
+    \]
+    Gdzie:  
+    - \( M \) – liczba częstotliwości w widmie.
+
+    \item \textbf{17. Odchylenie standardowe widma}  
+    \[
+    \sigma(P_{xx}) = \sqrt{\frac{1}{M} \sum_{j=1}^{M} (P_{xx}(f_j) - \overline{P_{xx}})^2}
+    \]
+
+    \item \textbf{18. Kurtoza widma}  
+    \[
+    \text{kurtosis}(P_{xx}) = \frac{\frac{1}{M} \sum_{j=1}^{M} (P_{xx}(f_j) - \overline{P_{xx}})^4}{\sigma(P_{xx})^4}
+    \]
+
+    \item \textbf{19. Całkowita energia widmowa}  
+    \[
+    \sum_{j=1}^{M} P_{xx}(f_j)
+    \]
+
+    \item \textbf{20. Udział wysokich pików}  
+    \[
+    \frac{\sum_{j=1}^{M} \mathbb{I}(P_{xx}(f_j) > \overline{P_{xx}})}{M}
+    \]
+
+    \item \textbf{21. Średnia wartość współczynnika falkowego}  
+    \[
+    \overline{|wt|} = \frac{1}{K} \sum_{k=1}^{K} |wt_k|
+    \]
+    Gdzie:  
+    - \( wt_k \) – współczynnik falkowy dla \( k \)-tej skali.
+
+    \item \textbf{22. Odchylenie standardowe współczynnika falkowego}  
+    \[
+    \sigma(|wt|) = \sqrt{\frac{1}{K} \sum_{k=1}^{K} (|wt_k| - \overline{|wt|})^2}
+    \]
+
+    \item \textbf{23. Energia falkowa}  
+    \[
+    \sum_{k=1}^{K} |wt_k|^2
+    \]
+
+    \item \textbf{24. Współczynnik zmienności}  
+    \[
+    \frac{\overline{x}}{\sigma}
+    \]
+
+    \item \textbf{25. Maksymalny współczynnik falkowy}  
+
+
+    \item \textbf{26. Mediana współczynnika falkowego}  
+
+
+    \item \textbf{27. Entropia Shannona współczynników falkowych}  
+    \[
+    \text{wentropy}(|wt|) = -\sum_{k=1}^{K} p(|wt_k|) \log p(|wt_k|)
+    \]
+
+    \item \textbf{28. Znormalizowana średnia wartość modułu różnic}  
+\[
+\frac{\frac{1}{N}\sum_{i=1}^{N-1} |x_{i+1} - x_i|}{\overline{x}}
+\]
+
+    \item \textbf{29. Znormalizowana suma różnic}  
+    \[
+    \frac{\sum_{i=1}^{N-1} |x_{i+1} - x_i|}{\sum_{i=1}^{N} |x_i|}
+    \]
+
+    \item \textbf{30. Znormalizowany RMSSD}  
+    \[
+    \frac{\sqrt{\frac{1}{N}\sum_{i=1}^{N-1} (x_{i+1} - x_i)^2}}{\sqrt{\overline{x^2}}}
+    \]
+\end{itemize}
+\newpage
+\subsection{Kod wyciągający cechy}
+\lstinputlisting[style=Matlab-editor, frame=single, firstline=50,lastline=92]{features_extraction.m}
+\section{Techniki uczenia maszynowego}
+
+Do celów klasyfikacji wybrałem 5 metod klasycznych oraz po kilka hiperparametrów które będą dostrajane. Dostrajanie będzie wykonywane przy pomocy zbioru walidującego, który będzie stanowić 15\%-20\% zbioru uczącego - tak aby nie doszło do przecieku danych 
+\subsection{Drzewa decyzyjne}
+\begin{itemize}
+    \item \texttt{max\_depth} – maksymalna głębokość drzewa
+    \item \texttt{min\_samples\_split} – minimalna liczba próbek do podziału węzła
+    \item \texttt{min\_samples\_leaf} – minimalna liczba próbek w liściu drzewa
+    \item \texttt{max\_features} – liczba cech do rozważenia przy podziale węzła
+\end{itemize}
+
+\subsection{Random Forest}
+\begin{itemize}
+    \item \texttt{n\_estimators} – liczba drzew w lesie
+    \item \texttt{max\_depth} – maksymalna głębokość każdego drzewa
+    \item \texttt{min\_samples\_split} – minimalna liczba próbek do podziału węzła
+    \item \texttt{min\_samples\_leaf} – minimalna liczba próbek w liściu drzewa
+    \item \texttt{max\_features} – liczba cech rozważanych przy podziale węzła
+    \end{itemize}
+
+\subsection{K-Nearest Neighbors}
+\begin{itemize}
+    \item \texttt{n\_neighbors} – liczba sąsiadów do rozważenia przy klasyfikacji
+    \item \texttt{metric} – miara odległości
+
+\end{itemize}
+
+\subsection{Support Vector Machines}
+\begin{itemize}
+    \item \texttt{C} – parametr regularyzacji 
+    \item \texttt{kernel} – rodzaj jądra
+    \item \texttt{degree} – stopień wielomianu 
+    \item \texttt{gamma} – współczynnik jądra
+    \item \texttt{coef0} – współczynnik dla jądra wielomianowego i sigmoidalnego
+    \item \texttt{probability} – czy obliczać prawdopodobieństwa 
+    \item \texttt{shrinking} – czy używać algorytmu kurczenia 
+\end{itemize}
+
+\subsection{Naïve Bayes}
+
+
+\subsection{Sieci neuronowe}
+Sieci neruonowe będą dostrajane przy użyciu bibloteki "Optuna" która pozwala stworzyć nam eksperyment którego celem jest maksymalizacja parametru zadanego. W naszym przykładzie będzie to maksymalizacja dokładności albo F1 dla zbioru walidującego\\
+
+Wybrane architektury:
+\begin{itemize}
+    \item Gęste sieci neuronowe
+    \item Konwolucyjne sieci neuronowe
+    \item Rekurencyjne sieci neuronowe
+    \item LSTM
+\end{itemize}
+
+\section{Podsumowanie}
+Ze względu na początek semestru oraz związane z nim kwestie organizacyjne, rozpocznę prace nad częścią projektowo-badawczą za kilka dni. Pozwoli mi to na spokojne opracowanie harmonogramu, który uwzględni obowiązki akademickie, pracę nad pracą dyplomową oraz działalność w kole naukowym.\\
+
+Jeśli ma Pan jakiekolwiek uwagi, pytania lub sugestie dotyczące moich założeń, chętnie umówię się na spotkanie lub rozmowę przez Microsoft Teams w dogodnym dla Pana terminie.
+\end{document}
