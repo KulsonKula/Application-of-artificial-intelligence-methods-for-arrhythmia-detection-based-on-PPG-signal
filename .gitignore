@@ -11,7 +11,8 @@
 *.cb
 *.cb2
 .*.lb
-
+*.zip
+*.keras
 ## Intermediate documents:
 *.dvi
 *.xdv
@@ -23,7 +24,7 @@
 
 ## Generated if empty string is given at "Please type another file name for output:"
 .pdf
-
+*.mat
 *.csv
 .csv
 ## Bibliography auxiliary files (bibtex/biblatex/biber):

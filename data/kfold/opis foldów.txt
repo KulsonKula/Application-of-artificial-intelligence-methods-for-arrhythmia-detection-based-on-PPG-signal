@@ -1,0 +1,31 @@
+MINIC
+fold 1
+af: 5, 12, 3, 18  
+nonaf: 8, 1, 14
+
+fold 2  
+af: 2, 9, 17, 14  
+nonaf: 10, 5, 13  
+
+fold 3  
+af: 7, 1, 16, 11  
+nonaf: 6, 12, 15  
+
+fold 4 
+af: 8, 4, 13, 6  
+nonaf: 3, 11, 9  
+
+fold 5
+af: 10, 15, 2, 19  
+nonaf: 7, 4, 2  
+
+PSYNET test:
+fold 1
+
+fold 2
+
+fold 3
+
+fold 4
+
+fold 5
