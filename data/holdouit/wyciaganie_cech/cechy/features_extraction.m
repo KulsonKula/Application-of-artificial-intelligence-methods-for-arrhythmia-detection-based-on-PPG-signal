@@ -54,44 +54,54 @@ for i = 1:numRecords
     featureMatrix(i, 3) = std(signal); % Standard Deviation
     featureMatrix(i, 4) = var(signal); % Variance
     featureMatrix(i, 5) = iqr(signal); % Interquartile Range
-    featureMatrix(i, 6) = max(signal); % Maximum
-    featureMatrix(i, 7) = min(signal); % Minimum
-    featureMatrix(i, 8) = mean(abs(diff(signal))); % Average of the absolute value of the differences
-    featureMatrix(i, 9) = 100 * sum(diff(signal) > 0) / (length(signal) - 1); % Percentage of Positive Differences
-    featureMatrix(i, 10) = sqrt(mean(diff(signal).^2)); % RMSSD
-    featureMatrix(i, 11) = mad(signal, 1); % Mean Absolute Deviation
-    featureMatrix(i, 12) = sum(signal.^2); % Energy
-    featureMatrix(i, 13) = skewness(signal); % Asymmetry
+    featureMatrix(i, 7) = sum(signal.^2); % Energy
 
-    % --- Entropia ---
-    featureMatrix(i, 14) = wentropy(signal, 'shannon'); % Shannon Entropy
-
-    % --- Cechy z domeny częstotliwości ---
-    [pxx, f] = periodogram(signal); % Widmo sygnału
-    featureMatrix(i, 15) = f(pxx == max(pxx)); % Maximal Spectral Peak
-    featureMatrix(i, 16) = mean(pxx); % Mean of Spectrum
-    featureMatrix(i, 17) = std(pxx); % Standard Deviation of Spectrum
-    featureMatrix(i, 18) = kurtosis(pxx); % Kurtosis of Spectrum
-    featureMatrix(i, 19) = sum(pxx); % Total Spectral Energy
-    featureMatrix(i, 20) = sum(pxx > mean(pxx)) / length(pxx); % Fraction of High Peaks
-
-    % --- Zależności czasowo-częstotliwościowe ---
-    wt = cwt(signal, 'amor'); % Continuous Wavelet Transform (Morlet Wavelet)
-    featureMatrix(i, 21) = mean(abs(wt), 'all'); % Mean Wavelet Coefficient Magnitude
-    featureMatrix(i, 22) = std(abs(wt), 0, 'all'); % Std Wavelet Coefficient Magnitude
-    featureMatrix(i, 23) = sum(abs(wt).^2, 'all'); % Wavelet Energy
-
-    % --- Cechy dodatkowe ---
-    featureMatrix(i, 24) = featureMatrix(i, 1) / featureMatrix(i, 3); % Coefficient of Variation
-    featureMatrix(i, 25) = max(abs(wt), [], 'all'); % Max Wavelet Coefficient
-    featureMatrix(i, 26) = median(abs(wt), 'all'); % Median Wavelet Coefficient
-    featureMatrix(i, 27) = wentropy(abs(wt), 'shannon'); % Wavelet Shannon Entropy
+    featureMatrix(i, 6) = mad(signal, 1); % Mean Absolute Deviation
+    
+    featureMatrix(i, 8) = skewness(signal); % Asymmetry
+    featureMatrix(i, 9) = wentropy(signal, 'shannon'); % Shannon Entropy
+    featureMatrix(i, 10) = featureMatrix(i, 3) / featureMatrix(i, 1); % Coefficient of Variation
 
     % Normalizacja cech związanych z różnicami
     differences = diff(signal);
-    featureMatrix(i, 28) = mean(abs(differences)) / featureMatrix(i, 1); % Normalized Absolute Deviation
-    featureMatrix(i, 29) = sum(abs(differences)) / sum(abs(signal)); % Normalized Absolute Difference
-    featureMatrix(i, 30) = sqrt(mean(differences.^2)) / sqrt(mean(signal.^2)); % Normalized RMSSD
+    featureMatrix(i, 11) = mean(differences); % Mean
+    featureMatrix(i, 12) = median(differences); % Median
+    featureMatrix(i, 13) = std(differences); % Standard Deviation
+    featureMatrix(i, 14) = var(differences); % Variance
+    featureMatrix(i, 15) = iqr(differences); % Interquartile Range
+    featureMatrix(i, 7) = sum(differences.^2); % Energy
+
+    featureMatrix(i, 16) = mean(abs(differences)); % Average of the absolute value of the differences
+    featureMatrix(i, 17) = 100 * sum(differences > 0) / (length(signal) - 1); % Percentage of Positive Differences
+    featureMatrix(i, 18) = sqrt(mean(differences.^2)); % RMSSD
+    featureMatrix(i, 19) = mean(abs(differences)) / featureMatrix(i, 1); % Normalized Absolute Deviation
+    featureMatrix(i, 20) = sum(abs(differences)) / sum(abs(signal)); % Normalized Absolute Difference
+
+    % --- Cechy z domeny częstotliwości ---
+    [pxx, f] = periodogram(signal); % Widmo sygnału
+    featureMatrix(i, 21) = mean(pxx); % Mean
+    featureMatrix(i, 22) = median(pxx); % Median
+    featureMatrix(i, 23) = std(pxx); % Standard Deviation
+    featureMatrix(i, 24) = var(pxx); % Variance
+    featureMatrix(i, 25) = iqr(pxx); % Interquartile Range
+
+    featureMatrix(i, 26) = f(pxx == max(pxx)); % Maximal Spectral Peak
+    featureMatrix(i, 27) = kurtosis(pxx); % Kurtosis of Spectrum
+    featureMatrix(i, 28) = sum(pxx); % Total Spectral Energy
+    featureMatrix(i, 29) = sum(pxx > mean(pxx)) / length(pxx); % Fraction of High Peaks
+
+    % --- Zależności czasowo-częstotliwościowe ---
+    wt = cwt(signal, 'amor'); % Continuous Wavelet Transform (Morlet Wavelet)
+    featureMatrix(i, 30) = mean(abs(wt), 'all');        % Mean Wavelet Coefficient Magnitude
+    featureMatrix(i, 31) = median(abs(wt), 'all');       % Median Wavelet Coefficient
+    featureMatrix(i, 32) = std(abs(wt), 0, 'all');       % Std Wavelet Coefficient Magnitude
+    featureMatrix(i, 33) = var(abs(wt), 0, 'all');       % Variance Wavelet Coefficient Magnitude
+    featureMatrix(i, 34) = iqr(abs(wt), 'all');          % IQR Wavelet Coefficient
+
+    featureMatrix(i, 35) = sum(abs(wt).^2, 'all');       % Wavelet Energy
+    featureMatrix(i, 36) = max(abs(wt), [], 'all');      % Max Wavelet Coefficient
+    featureMatrix(i, 37) = entropy(abs(wt), 'shannon'); % Wavelet Shannon Entropy
+
 
 
     disp(i)
