@@ -67,7 +67,6 @@
 
 % Proszę wpisać swoje dane w poniższych definicjach.
 
-% TODO
 % dane autora
 \newcommand{\FirstNameAuthor}{Jakub}
 \newcommand{\SurnameAuthor}{Kula}
@@ -84,7 +83,7 @@
 %%%%%%%%%%
 
 \newcommand{\Supervisor}{dr hab. inż. Pander Tomasz, prof. PŚ}     % dane promotora (bez $\langle$ i $\rangle$)
-\newcommand{\Title}{Zastosowanie metod sztucznej inteligencji do detekcji arytmii na podstawie sygnałów PPG}           % tytuł pracy po polsku
+\newcommand{\Title}{Zastosowanie metod sztucznej inteligencji do detekcji arytmii\\na podstawie sygnałów PPG}           % tytuł pracy po polsku
 \newcommand{\TitleAlt}{Application of artificial intelligence methods for arrhythmia detection based on PPG signal}                     % thesis title in English
 \newcommand{\Program}{Informatyka}            % kierunek studiów  (bez $\langle$ i $\rangle$)
 \newcommand{\Specialisation}{Internet i technologie sieciowe}     % specjalność  (bez $\langle$ i $\rangle$)
@@ -142,7 +141,7 @@
 	\usepackage{lmodern}
 \fi
 
-
+\usepackage{amsmath}
 
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{graphicx}
@@ -173,7 +172,6 @@
 
 
 
-%%%% TODO LIST GENERATOR %%%%%%%%%
 
 \usepackage{color}
 \definecolor{brickred}      {cmyk}{0   , 0.89, 0.94, 0.28}
@@ -200,7 +198,6 @@
 \newcommand{\kolokwializm}{\ksremark{kolokwializm}}
 \newcommand{\cudzyslowy}{\ksremark{,,polskie cudzysłowy''}}
 
-%%%%%%%%%%%%%% END OF TODO LIST GENERATOR %%%%%%%%%%%
 
 \newcommand{\printCoauthor}{%		
 	\StrLen{\FirstNameCoauthor}[\FNCoALen]
@@ -474,17 +471,16 @@
 \pagestyle{empty}
 
 
-%%% No to zaczynamy pisać pracę :-) %%%%
 
-% TODO
+
 \subsubsection*{Tytuł pracy}
-\Title
+Zastosowanie metod sztucznej inteligencji do detekcji arytmii na podstawie sygnałów PPG
 
 \subsubsection*{Streszczenie}
-(Streszczenie pracy - odpowiednie pole w systemie APD powinno zawierać kopię tego streszczenia.)
+Praca magisterska koncentruje się na opracowaniu binarnych klasyfikatorów służących do detekcji arytmii serca na podstawie sygnału fotopletyzmograficznego. W ramach badań przeanalizowano wybrane zbiory danych, przedstawiono zasadę działania wybranych modeli uczenia maszynowego oraz opisano proces przetwarzania danych. Ponadto dokonano selekcji wektora cech oraz przeprowadzono optymalizację hiperparametrów w celu zwiększenia skuteczności klasyfikacji.
 
 \subsubsection*{Słowa kluczowe}
-(2-5 slow (fraz) kluczowych, oddzielonych przecinkami)
+Arytmia, fotopletyzmografia, uczenie maszynowe
 
 \subsubsection*{Thesis title}
 \begin{otherlanguage}{british}
@@ -493,11 +489,11 @@
 
 \subsubsection*{Abstract}
 \begin{otherlanguage}{british}
-	(Thesis abstract - to be copied into an appropriate field during an electronic submission - in English.)
+	The master's thesis focuses on the development of binary classifiers for the detection of cardiac arrhythmias based on photoplethysmographic signals. As part of the study, selected datasets were analyzed, the principles of operation of chosen machine learning models were presented, and the data preprocessing pipeline was described. Furthermore, feature vector selection was performed and hyperparameter optimization was conducted to improve classification effectiveness.
 \end{otherlanguage}
 \subsubsection*{Key words}
 \begin{otherlanguage}{british}
-	(2-5 keywords, separated by commas)
+	Arrhythmia, photoplethysmogram, machine learning
 \end{otherlanguage}
 
 
@@ -519,53 +515,168 @@
 
 %%%%%%%%%%%%%% wlasciwa tresc pracy %%%%%%%%%%%%%%%%%
 
-% TODO
-\chapter{Wstęp}
-\section{Cel i zakres pracy}
-\section{Aktualny stan wiedzy}
-\section{Charakterystyka rozdziałów}
 
-% TODO
+\chapter{Wstęp}
+
+Arytmia serca jest jedną z najpoważniejszych chorób układu krążenia, dotykającą miliony osób na świecie. W 2019 roku blisko 60 milionów ludzi żyło z nieregularnym rytmem serca~\cite{Li20232}, a w grupie wiekowej powyżej 75. roku życia częstość występowania arytmii przekraczała 10\%~\cite{Volgman2022}. Choroba ta zwiększa pięciokrotnie ryzyko udaru mózgu, przy czym około 25\% wszystkich udarów jest związanych z arytmią~\cite{Hindricks2021}. Wczesne wykrywanie nieregularności rytmu serca ma kluczowe znaczenie dla zapobiegania poważnym powikłaniom i ratowania życia.\\
+
+
+Najczęściej wykorzystywanym sygnałem w diagnostyce zaburzeń rytmu serca pozostaje sygnał elektrokardiograficzny (EKG), który stanowi standardową metodę detekcji oraz diagnozowania arytmii~\cite{AYYUB2025110594}. Wraz z rosnącą popularnością opasek fitness i smartwatchy, wyposażonych w czujniki rejestrujące parametry stanu zdrowia, możliwa staje się wczesna detekcja nieregularnej pracy serca przy wykorzystaniu sygnału fotopletyzmograficznego (ang. \english{photoplethysmogram} -- PPG)~\cite{Lubitz2022, Wessling2021}. Typowe czujniki sygnału PPG, ze względu na prostotę działania oraz niższe koszty produkcji sensorów w porównaniu do urządzeń rejestrujących EKG, są powszechnie stosowany w tego typu urządzeniach. Dodatkową zaletą czujników sygnału PPG jest niewielki rozmiar oraz komfort stosowania czujników optycznych, co umożliwia ciągłe monitorowanie pracy serca.
+
+
+\section{Aktualny stan wiedzy}
+
+
+Najnowsze metaanalizy wykazały, że wybrane algorytmy detekcji arytmii osiągnęły wysokie wartości miar jakościowych przy wykorzystaniu sygnału PPG rejestrowanego za pomocą smartwatchy~\cite{Luo2025}. Jednocześnie wykorzystanie smartwatchy do detekcji wiąże się z obniżoną jakością sygnału, wynikającą z licznych artefaktów generowanych przez ruch czujnika optycznego~\cite{Pereira2020}. W konsekwencji, niektóre badania wykazują znaczną liczbę fałszywych alarmów lub brak detekcji krótkotrwałych epizodów arytmii~\cite{Huntelaar2024}. Jednak badania przeprowadzone na zlecenie firmy Huawei~\cite{Guo2019} wykazały, że wykorzystanie tego typu urządzeń umożliwia z wysoką dokładnością identyfikację osób u których podejrzewa się występowanie arytmii, które powinny zostać skierowane na dalszą, bardziej szczegółową diagnostykę.\\
+
+Wiele badań podkreśla, że w celu skonstruowania odpowiedniego wektora cech wejściowych konieczna jest dalsza i bardziej dokładna analiza sygnałów PPG. Najczęściej uwzględniane są cechy pochodzące z dziedziny czasu oraz częstotliwości~\cite{Pereira2016, Paiva2018, Pereira2019}. Większość badań dotyczących detekcji arytmii serca z wykorzystaniem sygnału PPG opiera się na analizie odcinków sygnału, których długość mieści się w przedziale od 10 sekund do 10 minut~\cite{Pereira2020}.\\
+
+W przypadku klasycznych klasyfikatorów uczenia maszynowego najczęściej stosuje się klasyfikatory k najbliższych sąsiadów, maszyny wektorów nośnych oraz drzewa decyzyjne. Metody uczenia nienadzorowanego są wykorzystywane zdecydowanie rzadziej~\cite{Pereira2020}. Szczegółowy opis omawianych metod klasyfikacji został przedstawiony w rozdziale~\ref{subsec:metody}.
+
+W kontekście zastosowania głębokich sieci neuronowych, najczęściej w badaniach wykorzystuje się zmodyfikowane warstwy splotowe przetwarzające jednowymiarowe wektory sygnału~\cite{Kudo2023}.
+
+
+
+
+\section{Cel i zakres pracy}
+Celem pracy jest przygotowanie binarnego klasyfikatora wykrywającego arytmię serca na podstawie sygnału fotopletyzmograficznego.
+Klasyfikator ma wykorzystywać informacje zawarte w tym oknie do identyfikacji sygnałów PPG które posiadają cechy charakterystyczne dla arytmii.\\
+
+Zakres pracy obejmuje:
+\begin{itemize}
+	\item Wybór odpowiednich zbiorów danych -- zbiór powinien zawierać wysokiej jakości, odpowiednio opisany sygnał PPG. Opis powinien obejmować m.in. czas próbkowania, zastosowane przekształcenia wstępne, rodzaj sygnału oraz informację, czy pochodzi on od osoby zdrowej, czy chorej. W przypadku osoby chorej należy także określić typ arytmii. Sygnały powinny być podzielone według pacjentów, aby uwzględnić to podczas podziału danych na zbiory.
+
+	\item Wstępne przetworzenie sygnałów -- ujednolicenie wartości charakterystycznych, takich jak czas próbkowania, przekształcenia wstępne oraz zakres wartości. Etap ten obejmuje również podział próbek na odpowiednie okna czasowe oraz ekstrakcję wektorów cech.
+
+	      \newpage
+	\item Wybór wektora cech -- w celu uczenia klasycznych klasyfikatorów należy przygotować wektor cech zawierający parametry pozwalające odróżnić sygnał osoby chorej od zdrowej. Cechy powinny pochodzić z różnych metod analizy sygnału.
+
+	\item Wybór miar jakościowych do oceny klasyfikatorów -- każda z wybranych metryk powinna oceniać modele pod innym kątem. Praca obejmuje także określenie funkcji celu, pozwalającej połączyć wyniki kilku metryk w jedną wartość w celu prostszego porównywania modeli.
+
+	\item Walidację krzyżową wyników -- każdy model powinien być testowany na danych, do których nie miał dostępu w trakcie procesu uczenia. Dotyczy to zarówno metod wykorzystujących cechy, jak i tych bazujących bezpośrednio na próbkach czasowych.
+
+	\item Optymalizacja hiperparametrów wybranych modeli -- eksperymenty mające na celu wybranie takich zestawów hiperparametrów, które zapewnią najwyższe wartości określonej miary jakościowej na zbiorze walidacyjnym.
+\end{itemize}
+
+Zakres pracy nie obejmuje:
+\begin{itemize}
+	\item Inżynierii cech -- w badaniach nie analizowano istotności wybranych cech, wpływu modyfikacji wektora cech ani znaczenia poszczególnych wartości charakterystycznych dla jakości predykcji modeli.
+	\item Modyfikacji długości wektora sygnału -- nie oceniano wpływu zmiany długości wektora sygnału na jakość predykcji. We wszystkich eksperymentach zastosowano jednakową liczbę próbek.
+	\item Klasyfikacji wieloklasowej sygnałów -- pomimo dostępności sygnałów reprezentujących różne typy arytmii, nie prowadzono klasyfikacji z rozróżnieniem poszczególnych typów.
+	\item Oceny skuteczności klasyfikacji poszczególnych typów arytmii -- wszystkie rodzaje arytmii analizowano łącznie, bez odrębnego badania ich klasyfikowalności.
+	\item Wykorzystania alternatywnych sygnałów -- w przypadku analizy pracy serca możliwe jest zastosowanie innych sygnałów, takich jak EKG. W badaniach uwzględniono wyłącznie sygnał PPG.
+\end{itemize}
+
+
 
 \chapter{Charakterystyka arytmii serca i sygnału PPG}
 \section{Klasyfikacja i mechanizmy arytmii serca}
-\subsection{Arytmie nadkomorowe}
-\subsection{Arytmie komorowe}
-\subsection{Migotanie przedsionków}
-\section{Fotopletyzmografia - zasada działania i zastosowania}
+Arytmie pracy serca definiuje się jako zaburzenia rytmu serca. Prawidłowy zakres częstości pracy serca w warunkach spoczynku wynosi od 60 do 100 ud/min u osoby dorosłej. W przypadku, gdy częstość ta przekracza 100 ud/min, mamy do czynienia z tachykardią, natomiast jeśli serce bije wolniej niż 60 razy na minutę, mówimy o bradykardii. Zaburzenia rytmu mogą również występować w postaci nieregularnych uderzeń serca~\cite{Makos2021}. Prawidłowy rytm serca jest kontrolowany przez impulsy elektryczne generowane w węźle zatokowym i przewodzone przez układ bodźcoprzewodzący serca. Arytmia pojawia się w momencie, gdy w sercu występuje nieprawidłowy impuls elektryczny, mogący pochodzić z dodatkowego ogniska lub tworzyć pętlę krążenia impulsu.
+
+Arytmie serca możemy podzielić na trzy grupy:
+\begin{itemize}
+	\item Arytmie nadkomorowe - powstają w węźle przedsionkowo-komorowym lub w przedsionkach, czyli powyżej komór. Przykładem arytmii nadkomorowej jest trzepotanie przedsionków, charakteryzujące się szybkim, lecz uporządkowanym skurczem przedsionków~\cite{Apteline2017}.
+	\item Arytmie komorowe - związane są z pobudzeniami wywoływanymi przez mięsień komór serca. Są one najczęściej występującym typem arytmii i jednocześnie najbardziej niebezpieczne, ponieważ mogą prowadzić do całkowitego zatrzymania pracy serca~\cite{Tang2017}. Do arytmii komorowych zalicza się między innymi migotanie komór oraz częstoskurcz komorowy.
+	\item Migotanie przedsionków - charakteryzuje się szybkim, niemiarowym biciem serca, które powoduje uczucie kołatania. Występuje w sytuacji, gdy przedsionki nie kurczą się prawidłowo, przez co nie wypychają odpowiedniej ilości krwi do komór.
+\end{itemize}
+
+
+Arytmia pracy serca, ze względu na swoją ogólną definicję, może być wywołana przez wiele czynników, w tym:
+\begin{itemize}
+	\item choroby układu krążenia - wiele schorzeń, takich jak nadciśnienie tętnicze czy wady zastawek serca, mogą prowadzić do nieregularności rytmu serca~\cite{NHLBI2022},
+	\item styl życia - brak aktywności fizycznej, przewlekły stres, palenie papierosów oraz nadmierne spożycie alkoholu czy kofeiny negatywnie wpływają na kondycję serca,
+	\item zaburzenia elektrolitowe - niedobory makroelementów, takich jak potas czy magnez, mogą zaburzać pracę serca~\cite{NHLBI2022},
+	\item czynniki genetyczne - niektóre arytmie mają podłoże genetyczne i są dziedziczone, np. zespół Brugady~\cite{Napolitano2006}.
+\end{itemize}
+
+Leczenie arytmii serca jest zależne od wielu czynników, między innymi od jej rodzaju czy nasilenia objawów.
+
+
+
+\section{Fotopletyzmografia}
+Fotopletyzmografia (ang. \english{Photoplethysmogram} - PPG) jest jedną z nieinwazyjnych metod rejestracji sygnałów biofizycznych, umożliwiającą monitorowanie dynamicznych zmian przepływu krwi związanych z pracą serca oraz układu krążenia~\cite{kyriacou2021ppg}.
+Zasada działania tej metody opiera się na pomiarze absorpcji lub odbicia promieniowania świetlnego, którego intensywność zmienia się w zależności od właściwości tkanek oraz objętości krwi, przez które światło przechodzi.
+
+Pomiar sygnału PPG może być realizowany w dwóch podstawowych konfiguracjach:
+\begin{itemize}
+	\item \textbf{Transmisyjnej}, w której nadajnik i odbiornik znajdują się po przeciwnych stronach tkanki. Rejestrowana jest wówczas ilość światła, które uległo absorpcji podczas przejścia przez badaną tkankę.
+	\item \textbf{Odbiciowej}, w której nadajnik i odbiornik umieszczone są po tej samej stronie tkanki. W tym przypadku analizowane jest światło odbite.
+\end{itemize}
+
+Sygnał PPG może być rejestrowany z różnych miejsc na ciele człowieka. Najczęściej wykorzystywane lokalizacje to palce, nadgarstki oraz inne obszary, w których tętnice znajdują się blisko powierzchni skóry. W zależności od zastosowania, w pomiarach używa się diod emitujących światło czerwone, podczerwone lub zielone~\cite{allen2007ppg}.\\
+
+\newpage
+\begin{figure}[!htbp]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{img/r2/ppg_diode2.png}
+		\caption{Konfiguracja transmisyjna}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{img/r2/ppg_diode1.png}
+		\caption{Konfiguracja odbiciowa}
+	\end{subfigure}
+	\caption{Schemat ilustrujący działanie PPG~\cite{liu2020ppg}}
+\end{figure}
+
+
+
+Sygnał fotopletyzmograficzny składa się z dwóch głównych składowych: stałej, związanej z pochłanianiem światła przez tkanki, oraz zmiennej, odpowiadającej rytmicznym zmianom objętości krwi wywołanym pracą serca. Każdy główny szczyt sygnału PPG odzwierciedla falę ciśnienia generowaną przez skurcz serca~(ang. \english{Systolic Peak}) oraz mniejszej fali wtórnej związanej z odbiciem fali od obwodowych naczeń krwionośnych~(ang. \english{Diastolic Peak})~\cite{kyriacou2021ppg}.\\
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{img/r2/test.jpg}
+	\caption{Sygnał PPG z zaznaczonymi szczytami~\cite{heo2021stress}.}
+	\label{jadro_svm}
+\end{figure}
+
+
+Należy jednak zauważyć, że sygnał PPG jest podatny na liczne zakłócenia. Na jego jakość wpływają m.in. poziom perfuzji krwi w miejscu pomiaru, obecność światła zewnętrznego, a także cechy osobnicze, takie jak grubość tkanek czy barwa skóry. Istotnym źródłem artefaktów są również zakłócenia ruchowe, wynikające z przesunięcia sensora podczas pomiaru~\cite{Sieczkowski2020}.\\
+
+Sygnał PPG posiada szerokie zastosowanie w diagnostyczne i monitorowaniu stanu zdrowia. Może on służyć do pomiaru częstości pracy serca, pozwala ocenić zmienność rytmu serca, oraz umożliwia obliczenie saturacji krwi. Dodatkowo, analiza tego sygnału pozwala na oszacowanie ciśnienia tętniczego. Ze względu na mały rozmiar czujników PPG, został on wcielony do wielu urządzeń do codziennego monitorowania parametrów zdrowotnych~\cite{allen2024advances}.
 
 \chapter{Metody uczenia maszynowego}
+
+Uczenie maszynowe stało się jednym z kluczowych narzędzi analizy danych, umożliwiającym wykrywanie wzorców, prognozowanie oraz klasyfikację zjawisk. Od początków jego rozwoju powstawały różnorodne podejścia, których celem było wykorzystanie mocy obliczeniowej komputerów do identyfikacji wzorców mogących umknąć percepcji człowieka.\\
+
+Aby uporządkować różnorodność istniejących podejść, w literaturze wyróżnia się kilka kryteriów klasyfikacji modeli uczenia maszynowego~\cite{Sarker2021DeepLearning}. Jednym z najczęściej stosowanych jest rodzaj nadzoru nad procesem uczenia. W uczeniu nadzorowanym model otrzymuje dane wejściowe wraz z etykietami, które określają prawidłowe klasy lub wartości referencyjne. Natomiast uczenie nienadzorowane opiera się na danych nieopisanych etykietami, a zadaniem modelu jest samodzielne wykrywanie struktur i grupowanie. Trzecim podejściem jest uczenie ze wzmocnieniem, w którym model wchodzi w interakcję z przygotowanym środowiskiem, a proces uczenia opiera się na systemie nagród i kar. W niniejszej pracy zostały wybrane tylko modele uczenia nadzorowanego.\\
+
+Innym ważnym kryterium podziału modeli jest sposób ich działania. Pierwszą grupę stanowią modele analizujące relację wejściowo-wyjściową, które uczą się bezpośredniej zależności między cechami wejściowymi a wartością referencyjną. Drugą grupę tworzą modele probabilistyczne, opisujące dane za pomocą rozkładów prawdopodobieństwa i określające z jakim prawdopodobieństwem dana obserwacja należy do określonej klasy. Trzecią kategorię stanowią modele oparte na podobieństwie do wcześniej zaobserwowanych danych, które podejmują decyzje poprzez porównywanie nowych próbek z sąsiadującymi w przestrzeni cech. Zdecydowano się na wybór przedstawicieli z każdej z tych trzech grup.\\
+
+Ze względu na duże zróżnicowanie modeli uczenia maszynowego, ich właściwy dobór i skuteczne zastosowanie wymagają szczegółowej znajomości zasad działania poszczególnych metod.
 \section{Klasyczne metody}
+\label{subsec:metody}
+\subsection*{K najbliższych sąsiadów (ang.~\english{k-nearest neighbors} - KNN)}
+KNN będący jednym z najprostszych klasyfikatorów, opiera swoje predykcje na analizie $k$ najbliższych sąsiadów ze zbioru treningowego. Metoda ta wykorzystuje metryki odległości do wyznaczenia próbek najbardziej zbliżonych do klasyfikowanego punktu, a następnie przypisuje mu etykietę tej klasy, która najczęściej występuje wśród wybranych $k$ sąsiadów.
 
-\subsection*{Metoda najbliższych sąsiadów (KNN)}
-Klasyfikator opierający swoje predykcje na analizie $k$ najbliższych sąsiadów ze zbioru treningowego. Metoda ta wykorzystuje metryki odległości do wyznaczenia próbek najbardziej zbliżonych do klasyfikowanego punktu, a następnie przypisuje mu etykietę tej klasy, która najczęściej występuje wśród wybranych $k$ sąsiadów.
-
-Najczęściej stosowaną metryką odległości jest odległość euklidesowa, zdefiniowana wzorem:
+Najczęściej stosowaną metryką odległości jest odległość euklidesowa, zdefiniowana następującą zależnością:
 \begin{equation}
-	d(x, y) = \left( \sum_{i=1}^{n} |x_i - y_i|^{2} \right)^{\frac{1}{2}}
+	d(x, y) = \left( \sum_{i=1}^{n} |x_i - y_i|^{2} \right)^{\frac{1}{2}},
 \end{equation}
-gdzie $x = (x_1, x_2, \ldots, x_n)$ oraz $y = (y_1, y_2, \ldots, y_n)$ to dwa punkty w $n$-wymiarowej przestrzeni cech. Generalizacją odległości Euklidesowej jest odległości Minkowskiego zdefiniowana jako:
+gdzie $\textbf{x} = (x_1, x_2, \ldots, x_n)$ oraz $\textbf{y} = (y_1, y_2, \ldots, y_n)$ to dwa punkty w $n$-wymiarowej przestrzeni cech. Generalizacją odległości Euklidesowej jest odległości Minkowskiego zdefiniowana jako:
 \begin{equation}
-	d(x, y) = \left( \sum_{i=1}^{n} |x_i - y_i|^{q} \right)^{\frac{1}{q}}
+	d(x, y) = \left( \sum_{i=1}^{n} |x_i - y_i|^{q} \right)^{\frac{1}{q}},
 \end{equation}
-gdzie q>0 \cite{liu2007web}. Można zauważyc, że dla q=2 otrzymuje odległość Euklidesową, a dla q=1 odległość Manhatan.
+gdzie $q>0$~\cite{liu2007web}. Można zauważyc, że dla $q=2$ otrzymuje odległość Euklidesową, a dla $q=1$ odległość Manhattan.
 Ze względu na to, że algorytm KNN opiera się na obliczaniu odległości między próbkami, istotne jest zachowanie jednolitej skali cech. W przypadku, gdy poszczególne cechy mają różne zakresy wartości, cecha o największej rozpiętości może zdominować obliczenia odległości, a tym samym nieproporcjonalnie wpłynąć na wynik predykcji.
 
-W przypadku tego klasyfikatora kluczowe jest odpowiednie dobranie liczby sąsiadów. Zbyt mała wartość parametru k może prowadzić do przeuczenia, w którym model nadmiernie dopasowuje się do danych treningowych i traci zdolność generalizacji. Z kolei zbyt duża liczba sąsiadów skutkuje zjawiskiem niedouczenia, w którym model nie jest w stanie uchwycić istotnych zależności w danych\cite{kuhn2013applied}.
+W przypadku tego klasyfikatora kluczowe jest odpowiednie dobranie liczby sąsiadów. Zbyt mała wartość parametru $k$ może prowadzić do przeuczenia, w którym model nadmiernie dopasowuje się do danych treningowych i traci zdolność generalizacji. Z kolei zbyt duża liczba sąsiadów skutkuje zjawiskiem niedouczenia, w którym model nie jest w stanie uchwycić istotnych zależności w danych~\cite{kuhn2013applied}.
 
 \subsection*{Drzewo decyzyjne}
 Model drzewa decyzyjnego opiera się na zagnieżdżonych regułach typu „jeżeli-wtedy”, które dzielą przestrzeń cech na coraz mniejsze podobszary. Struktura drzewa składa się z:
 \begin{itemize}
 	\item korzenia - punktu początkowego, od którego rozpoczyna się proces podejmowania decyzji,
-	\item węzłów decyzyjnyc - zawierających testy logiczne dzielące dane na podzbiory na podstawie wartości cech,
+	\item węzłów decyzyjnych - zawierających testy logiczne dzielące dane na podzbiory na podstawie wartości cech,
 	\item gałęzi - reprezentujących możliwe wyniki testów prowadzące do kolejnych węzłów,
 	\item liści - końcowych węzłów, w których przypisywana jest wartość przewidywanej klasy.
 \end{itemize}
-Proces uczenia drzewa decyzyjnego polega na iteracyjnym wyborze cech oraz odpowiadających im wartości progowych, które najlepiej rozdzielają dane.
+Proces uczenia drzewa decyzyjnego polega na iteracyjnym wyborze cech oraz odpowiadających im wartości progowych, które najlepiej rozdzielają dane~\cite{Aggarwal2020}.
 
 \begin{figure}[!h]
 	\centering
-	\caption{Przykład drzewa decyzyjnego}
 	\resizebox{\textwidth}{!}{
 		\begin{tikzpicture}[
 				edge from parent/.style={draw, -latex},
@@ -609,118 +720,129 @@ Proces uczenia drzewa decyzyjnego polega na iteracyjnym wyborze cech oraz odpowi
 				};
 		\end{tikzpicture}
 	}
+	\caption{Przykład drzewa decyzyjnego}
 \end{figure}
 
-Drzewa decyzyjne, dzięki prostocie procesu uczenia i działania, cechują się wysoką interpretowalnością. Mimo że drzewo może zawierać wiele węzłów decyzyjnych, użytkownik jest w stanie z łatwością prześledzić krok po kroku ciąg decyzji prowadzących do końcowej predykcji.
+Drzewa decyzyjne, dzięki prostocie procesu uczenia i działania, cechują się wysoką interpretowalnością. Mimo, że drzewo może zawierać wiele węzłów decyzyjnych, użytkownik jest w stanie z łatwością prześledzić krok po kroku ciąg decyzji prowadzących do końcowej predykcji.
 Największą wadą drzew decyzyjnych jest ich skłonność do przeuczania, co oznacza, że model traci zdolność do uogólniania i zbyt dokładnie dopasowuje się do danych ze zbioru uczącego. Zjawisko to szczególnie często występuje w przypadku bardzo rozbudowanych drzew.\\
 
-Podczas procesu budowy drzewa decyzyjnego możliwe jest pełne kontrolowanie jego struktury poprzez określenie między innymi ograniczeń związanych z maksymalną głębokością drzewa oraz minimalną liczbą próbek wymaganą do utworzenia węzła decyzyjnego. Pozwala to na regulację złożoności modelu i ograniczenie ryzyka przeuczenia.
+Podczas budowy drzewa decyzyjnego możliwe jest pełne kontrolowanie jego struktury poprzez odpowiednie ustawienie hiperparametrów. Parametr \textit{max features} określa maksymalną liczbę cech branych pod uwagę przy wyborze cechy, według której następuje podział (w zależności od całkowitej liczby cech), natomiast \textit{criterion} definiuje sposób oceny jakości tego podziału. Parametry \textit{min samples split} oraz \textit{min samples leaf} odpowiadają odpowiednio za minimalną liczbę próbek wymaganą do dokonania podziału oraz minimalną liczbę próbek znajdujących się w liściu. Z kolei \textit{max depth} ogranicza maksymalną głębokość drzewa decyzyjnego, a tym samym maksymalną liczbę testów logicznych prowadzących od korzenia do liścia. Odpowiednie dobranie tych hiperparametrów pozwala kontrolować złożoność modelu i ograniczać ryzyko przeuczenia.
+
 \subsection*{Las losowy}
 Klasyfikator oparty na zbiorze drzew decyzyjnych, których predykcje są agregowane w celu podjęcia decyzji końcowej, zwykle przez głosowanie większościowe. Model ten wykorzystuje dwa kluczowe mechanizmy w procesie uczenia:
 
 \begin{itemize}
-	\item Bootstrap aggregation - dla każdego drzewa decyzyjnego generowany jest losowy podzbiór próbek (z powtórzeniami) ze zbioru treningowego.
-	\item Losowy wybór cech - na każdym etapie podziału drzewa rozważana jest tylko losowo wybrana podgrupa cech.
+	\item Bootstrap aggregating - dla każdego drzewa decyzyjnego generowany jest losowy podzbiór próbek (z powtórzeniami) ze zbioru treningowego.
+	\item Losowy wybór cech - na każdym etapie podziału drzewa rozważana jest tylko losowo wybrana podgrupa cech~\cite{Majumdar2023}.
 \end{itemize}
 
-Zastosowanie powyższych technik sprawia, że lasy losowe cechują się większą odpornością na przeuczenie w porównaniu do pojedynczych drzew decyzyjnych. Dodatkową zaletą jest możliwość oszacowania niepewności predykcji na podstawie rozrzutu odpowiedzi poszczególnych drzew. Wadą tej metody jest natomiast ograniczona interpretowalność oraz zwiększone wymagania obliczeniowe i pamięciowe względem pojedynczych modeli drzewiastych.
+Zastosowanie powyższych technik sprawia, że lasy losowe cechują się większą odpornością na przeuczenie w porównaniu do pojedynczych drzew decyzyjnych. Dodatkową zaletą jest możliwość oszacowania niepewności predykcji na podstawie rozrzutu odpowiedzi poszczególnych drzew. Wadą tej metody jest natomiast ograniczona interpretowalność oraz zwiększone wymagania obliczeniowe i pamięciowe względem pojedynczych modeli drzewiastych.\\
+
+Las losowy dziedziczy wszystkie podstawowe hiperparametry drzewa decyzyjnego, ponieważ jego działanie opiera się na równoległym uczeniu wielu takich modeli. Dlatego parametry \textit{criterion}, \textit{max features}, \textit{min samples split}, \textit{min samples leaf} oraz \textit{max depth}, stosowane w pojedynczym drzewie decyzyjnym, mogą być również definiowane w przypadku lasu losowego. Dodatkowym, unikatowym hiperparametrem charakterystycznym wyłącznie dla tego modelu jest \textit{n estimators}, określający liczbę drzew wchodzących w jego skład.
+
 \subsection*{Naiwny klasyfikator Bayesa}
-Klasyfikator oparty na teorii Bayesa, który dokonuje klasyfikacji poprzez ocenę prawdopodobieństwa przynależności wektora cech do poszczególnych klas. Model ten nie analizuje bezpośrednich zależności między cechami a klasą, lecz na podstawie danych treningowych estymuje rozkłady prawdopodobieństwa cech w każdej klasie. Przy klasyfikacji nowych próbek oblicza się prawdopodobieństwo przynależności wektora cech do każdej klasy, a przypisanie następuje do klasy o największym prawdopodobieństwie. Regułę Bayesa można zapisać wzorem:
+Klasyfikator oparty na teorii Bayesa, który dokonuje klasyfikacji poprzez ocenę prawdopodobieństwa przynależności wektora cech do poszczególnych klas. Model ten nie analizuje bezpośrednich zależności między cechami a klasą, lecz na podstawie danych treningowych estymuje rozkłady prawdopodobieństwa cech w każdej klasie. Przy klasyfikacji nowych próbek oblicza się prawdopodobieństwo przynależności wektora cech do każdej klasy, a przypisanie następuje do klasy o największym prawdopodobieństwie~\cite{Majumdar2023}. Regułę Bayesa można zapisać wzorem:
 \begin{equation}
 	P(C_k \mid \mathbf{x}) = \frac{P(\mathbf{x} \mid C_k) \cdot P(C_k)}{P(\mathbf{x})},
 \end{equation}
-gdzie:
+\newpage
+\noindent gdzie:
 \begin{itemize}
 	\item $\mathbf{x}$ - wektor cech opisujących próbkę,
 	\item $C_k$ - klasa, do której próbka może należeć,
-	\item $P(C_k \mid \mathbf{x})$ - prawdopodobieństwo, że próbka o cechach $\mathbf{x}$ należy do klasy $C_k$,
-	\item $P(\mathbf{x} \mid C_k)$ - prawdopodobieństwo zaobserwowania cech $\mathbf{x}$, pod warunkiem, że próbka należy do klasy $C_k$,
+	\item $P(C_k \mid \mathbf{x})$ - prawdopodobieństwo warunkowe, że próbka o cechach $\mathbf{x}$ należy do klasy $C_k$,
+	\item $P(\mathbf{x} \mid C_k)$ - prawdopodobieństwo warunkowe zaobserwowania cech $\mathbf{x}$, pod warunkiem, że próbka należy do klasy $C_k$,
 	\item $P(C_k)$ - prawdopodobieństwo wystąpienia klasy $C_k$,
 	\item $P(\mathbf{x})$ - całkowite prawdopodobieństwo wystąpienia cech $\mathbf{x}$.
 \end{itemize}
 
-Klasyfikator nazywany jest „naiwnym” ze względu na przyjęte założenie o niezależności cech, które znacząco uproszczają obliczenia statystyczne, jednak jest jest ono zazwyczaj nierealistyczne.
+Klasyfikator nazywany jest „naiwnym” ze względu na przyjęte założenie o niezależności cech, które znacząco upraszczają obliczenia statystyczne, jednak jest ono zazwyczaj nierealistyczne.
 
-% \begin{figure}[!htbp]
-% 	\centering
-% 	\includegraphics[width=0.5\linewidth]{img/r3/bayes_1.png}
-% 	\caption{Przykładowy rozkład klas}
-% 	\label{fig:wykres_przyk_roz_klas}
-% \end{figure}
-% Na przykładzie rozkładu klas względem dwóch cech: A oraz B, przedstawionym na rysunku \ref{fig:wykres_przyk_roz_klas}, można zaobserwować, iż klasy nie są separowalne liniowo - nie istnieje hiperpłaszczyzna, która umożliwiłaby pełne rozdzielenie próbek obu klas bez błędów klasyfikacji. Ponadto, liczebność próbek w obu klasach jest równa, co implikuje, że ich prawdopodobieństwo wylosowania każdej próbki jest jednakowe: $P(A) = P(B)$. W związku z tym że całkowite prawdopodobieństwo wystąpienia cech X jest równe w przypadku klasy A i B, możemy je pominać. Aby ocenić prawdopodobieństwo przynależności nowej próbki wykorzystując teorie Bayesowską, wymagane jest obliczenie rozkładu gęstości klas obu cech.
+\subsection*{Maszyna wektorów nośnych (ang. \english{Support vector machine} -- SVM)}
+Maszyna wektorów nośnych to klasyfikator, którego celem jest wyznaczenie optymalnej granicy decyzyjnej oddzielającej dane należące do różnych klas. W sytuacji, gdy dane są liniowo separowalne, istnieje nieskończenie wiele możliwych hiperpłaszczyzn rozdzielających. SVM wybiera tę, która maksymalizuje tzw. margines, czyli minimalną odległość między granicą decyzyjną a najbliższymi punktami obu klas. Takie podejście zapewnia dobrą generalizację klasyfikatora~\cite{James2021}.\\
 
-% \begin{figure}[!htbp]
-% 	\centering
-% 	\begin{subfigure}[b]{0.45\textwidth}
-% 		\centering
-% 		\includegraphics[width=\linewidth]{img/r3/bayes_2.png}
-% 		\caption{Rozkład gęstości cechy A}
-% 		\label{fig:wykres2}
-% 	\end{subfigure}
-% 	\hfill
-% 	\begin{subfigure}[b]{0.45\textwidth}
-% 		\centering
-% 		\includegraphics[width=\linewidth]{img/r3/bayes_3.png}
-% 		\caption{Rozkład gęstości cechy B}
-% 		\label{fig:wykres3}
-% 	\end{subfigure}
+W przypadku, gdy dane nie są liniowo separowalne, stosuje się funkcję jądra, która przekształca przestrzeń cech do przestrzeni o wyższym wymiarze, w której możliwe jest liniowe rozdzielenie danych. Wykorzystanie funkcji jądra pozwala SVM na modelowanie nieliniowych granic decyzyjnych bez jawnego przekształcania danych.\\
 
-% 	\caption{Rozkłady gęstości cech w klasach}
-% 	\label{fig:subplots_three}
-% \end{figure}
-% Analizując wykresy przedstawione na rysunku \ref{fig:subplots_three}, można zauważyć, że w rozpatrywanym przypadku rozkłady obu klas wykazują wyraźne różnice względem wartości cech. Dla obu cech, próbki należące do klasy A częściej występują przy niższych wartościach, natomiast próbki klasy B dominują w zakresie wyższych wartości. W przypadku cechy A, punkt przecięcia gęstości rozkładów obu klas - odpowiadający wartości, dla której prawdopodobieństwa przynależności do obu klas są równe - występuje w przybliżeniu przy wartości 0,55. Analogiczny punkt równowagi dla cechy B przypada na wartość około 0,4.
 
-% W celu sprawdzenia porówniania prawdopodobieństwa zdecydowano się sprawdzić prawdopodobieńśtwo przynależności do obu klas dla cech (A,B)=(0.35,0.35)
-% \begin{equation}
-% 	P((0.35,0.35)\mid A) = 0,
-% \end{equation}
-% \newpage
+\newpage
+\textbf{Jądro liniowe (ang. \english{Linear kernel})} stosuje iloczyn skalarny próbek wejściowych. Funkcja tego jądra określa też podobieństwo kosinusowe między punktami, jeśli wektory są do siebie podobne wartość iloczynu skalarnego będzie duża, natomiast gdy wektory są prostopadłe, wartość iloczynu skalarnego będzie równa zera. Funkcje jądra liniowego opisuje wzór:
+\begin{equation}
+	K(\mathbf{x}_1, \mathbf{x}_2) = \mathbf{x}_1^\top \mathbf{x}_2,
+\end{equation}
+\noindent gdzie:
+\begin{itemize}
+	\item $K(\mathbf{x}_1, \mathbf{x}_2)$ - funkcja jądra,
+	\item $\mathbf{x}_1, \mathbf{x}_2$ - wektory cech.
+\end{itemize}
 
-\subsection*{Maszyna wektorów nośnych (SVM)}
-Maszyna wektorów nośnych to klasyfikator, którego celem jest wyznaczenie optymalnej granicy decyzyjnej oddzielającej dane należące do różnych klas. W sytuacji, gdy dane są liniowo separowalne, istnieje nieskończenie wiele możliwych hiperpłaszczyzn rozdzielających. SVM wybiera tę, która maksymalizuje tzw. margines, czyli minimalną odległość między granicą decyzyjną a najbliższymi punktami obu klas. Takie podejście zapewnia dobrą generalizację klasyfikatora.
+\textbf{Jądro sigmoidalne (ang. \english{Sigmoid kernel})} który wykorzystuje funckcje tangensa hiperbolicznego, opisane wzorem:
+\begin{equation}
+	K(\mathbf{x}_1, \mathbf{x}_2) = \tanh(\gamma \cdot
+	\mathbf{x}_1^\top\mathbf{x}_2 + r),
+\end{equation}
+\noindent gdzie:
+\begin{itemize}
+	\item $\gamma$ - parametr kontrolujący wpływ pojedyńczej próbki na granice decyzyjną,
+	\item $r$ - wyraz wolny, opisywany przez parametr \textit{coef0}.
+\end{itemize}
 
-W przypadku, gdy dane nie są liniowo separowalne, stosuje się funkcję jądra, która przekształca przestrzeń cech do przestrzeni o wyższym wymiarze, w której możliwe jest liniowe rozdzielenie danych. Wykorzystanie funkcji jądra pozwala SVM na modelowanie nieliniowych granic decyzyjnych bez jawnego przekształcania danych.
+
+\textbf{Jądro wielomianowe (ang. \english{Polynomial kernel})} - jądro rozszerzające dane do przestrzeni wielowymiarowej, opisane wzorem:
+\begin{equation}
+	K(\mathbf{x}_1, \mathbf{x}_2) = (\gamma \cdot \
+	\mathbf{x}_1^\top\mathbf{x}_2 + r)^d,
+\end{equation}
+\noindent gdzie:
+\begin{itemize}
+	\item $d$ - stopień wielomianu.
+\end{itemize}
+
+
+\textbf{Jądro radialnej funkcji bazowej (ang. \english{Radial Basis Function - RBF})} który wykorzystuje eksponentę kwadratu odległości euklidesowej, opisane wzorem:
+
+\begin{equation}
+	K(\mathbf{x}_1, \mathbf{x}_2) = \exp\left(-\gamma \cdot
+	{\|\mathbf{x}_1 - \mathbf{x}_2\|^2}\right).
+\end{equation}
+
 
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=0.6\textwidth]{img/r3/kernels.png}
+	\includegraphics[width=0.55\textwidth]{img/r3/kernels.png}
 	\caption{Przykłady granic decyzyjnych w przestrzeni cech na zbiorze XOR\cite{sklearn_api}}
 	\label{jadro_svm}
 \end{figure}
 
-% \begin{figure}[!htbp]
-% 	\centering
-% 	\caption{Wykresy wybranych funckji aktywacji}
-% 	\begin{subfigure}[b]{0.4\textwidth}
-% 		\centering
-% 		\includegraphics[width=\linewidth]{img/r3/kerlen_linear.png}
-% 		\caption{ReLU}
-% 		\label{fig:wykres2}
-% 	\end{subfigure}
-% 	\hfill
-% 	\begin{subfigure}[b]{0.4\textwidth}
-% 		\centering
-% 		\includegraphics[width=\linewidth]{img/r3/kerlen_poly.png}
-% 		\caption{Sigmoid}
-% 		\label{Sigmoid}
-% 	\end{subfigure}
-% 	\begin{subfigure}[b]{0.4\textwidth}
-% 		\centering
-% 		\includegraphics[width=\linewidth]{img/r3/kerlen_rbg.png}
-% 		\caption{Sigmoid}
-% 		\label{Sigmoid}
-% 	\end{subfigure}
-% \end{figure}
 \newpage
-\subsection*{LS-SVM}
-LS-SVM stanowi modyfikację klasycznego SVM, w której problem optymalizacji kwadratowej zastąpiono rozwiązaniem układu równań liniowych \cite{suykens2002}. Kluczową różnicą w stosunku do standardowej wersji jest zastosowanie funkcji kosztu w postaci sumy kwadratów błędów oraz wykorzystanie równości jako ograniczeń optymalizacji, zamiast nierówności.
+Niezależnie od wybranego jądra, metoda SVM posiada parametr $C$, który odpowiada za regularyzację L2 w funkcji kosztu minimalizowanej przez klasyfikator. Parametr ten określa stopień karania modelu za błędy klasyfikacji -- większe wartości $C$ powodują, że model stara się bardziej dokładnie dopasować dane treningowe kosztem potencjalnego przeuczenia.
+
+
+
+\subsection*{Maszyna wektorów nośnych najmniejszych kwadratów (ang. \english{Least-Squares Support Vector Machine} -- LS-SVM)}
+
+LS-SVM stanowi modyfikację klasycznego algorytmu SVM, w której klasyczne zagadnienie optymalizacji kwadratowej zastąpiono rozwiązaniem układu równań liniowych~\cite{suykens2002}. Przyrostek LS odnosi się do zastosowania funkcji kosztu w postaci metody najmniejszych kwadratów, czyli sumy kwadratów błędów pomiędzy przewidywaniami a rzeczywistymi etykietami. Kluczową różnicą względem standardowej wersji SVM jest ponadto wykorzystanie równości jako ograniczeń optymalizacyjnych, zamiast typowych nierówności~\cite{Suykens1999}.
+Funkcje kosztów metody LS-SVM opisuje wzór:
+
+\begin{equation}
+	J(w, b) = \frac{1}{2} \textbf{w}^\top \textbf{w} + \frac{\gamma}{2} \sum_{i=1}^{N} (y_i - f(x_i))^2,
+\end{equation}
+
+\noindent gdzie:
+\begin{itemize}
+	\item $\textbf{w}$ - wektor wag modelu,
+	\item $b$ - wyraz wolny, przesuwający funkcję decyzyjną,
+	\item $f(x_i)$ - wartość przewidywana przez model dla próbki $x_i$,
+	\item $y_i$ - rzeczywista etykieta klasy dla $i$-tej próbki,
+	\item $N$ - liczba próbek w zbiorze uczącym,
+	\item $\gamma$ - parametr regularyzacyjny.
+\end{itemize}
+
 
 Podejście to znacząco upraszcza obliczenia, czyniąc algorytm bardziej efektywnym pod względem czasu uczenia, szczególnie dla dużych zbiorów danych. Jednakże, uproszczona forma LS-SVM charakteryzuje się większą wrażliwością na obserwacje odstające, co może wpływać na stabilność klasyfikatora w obecności szumu lub nietypowych próbek.
 
-\subsection*{Modele typu Boosting} Koncepcja polegajaca na połaczeniu wielu modeli posiadających małą skuteczność w celu stworzenia jednego modelu o dużej dokładności\cite{valiant1984, kearns1989}. W ogólnym przypadku schemat działania boostingu polega na sekwencyjnym uczeniu modeli, gdzie każdy kolejny model otrzymuje informację o błędach popełnionych przez poprzednie i na tej podstawie stara się poprawić jakość predykcji całego systemu.
+\subsection*{Modele typu Boosting} Koncepcja polegająca na połączeniu wielu modeli posiadających małą skuteczność w celu stworzenia jednego modelu o dużej dokładności~\cite{valiant1984, kearns1989}. W ogólnym przypadku schemat działania boostingu polega na sekwencyjnym uczeniu modeli, gdzie każdy kolejny model otrzymuje informację o błędach popełnionych przez poprzednie i na tej podstawie stara się poprawić jakość predykcji całego systemu.
 \begin{figure}[!h]
 	\centering
-	\caption{Schemat przetwarznia wstępnego}
 
 	\begin{tikzpicture}
 		% Bloki
@@ -755,24 +877,28 @@ Podejście to znacząco upraszcza obliczenia, czyniąc algorytm bardziej efektyw
 		\draw[->] (W_N) -- (wynik);
 		\draw[->] (4.8,-4.2) -- (N);
 	\end{tikzpicture}
+	\caption{Schemat działania algorytmu boosting}
 \end{figure}
 
 Największą wadą boostingu jest wysokie ryzyko przeuczenia, wynikające z jego mechanizmu uczenia się na błędach. Takie podejście sprzyja nadmiernemu skupianiu się na przykładach trudnych do sklasyfikowania, co może prowadzić do zbyt mocnego dopasowania modelu do danych treningowych i utraty zdolności generalizacji.
 
 Zdecydowano się na wybór trzech modeli typu boosting, opartych na technice \textit{Gradient Boosting}, czyli metodzie polegającej na sekwencyjnym minimalizowaniu funkcji straty poprzednich modeli przy użyciu algorytmu spadku gradientowego. Wybrane modele:
 \begin{itemize}
-	\item \textbf{XGBoost} - wykorzystuje modele drzew decyzyjnych, w każdej iteracji dodając kolejne drzewo, które uczy się na podstawie błędów poprzednich. W celu minimalizacji funkcji straty stosowane jest rozwinięcie Taylora drugiego rzędu, a także regularyzacja L1 i L2 w celu zapobiega przeuczeniu.
+	\item \textbf{XGBoost} - wykorzystuje modele drzew decyzyjnych, w każdej iteracji dodając kolejne drzewo, które uczy się na podstawie błędów poprzednich. W celu minimalizacji funkcji straty stosowane jest rozwinięcie Taylora drugiego rzędu, a także regularyzacja L1 i L2 w celu zapobiegania przeuczeniu~\cite{Harrison2023}.
 
-	\item \textbf{CatBoost} - podobnie jak XGBoost opiera się na drzewach decyzyjnych i metodzie gradient boosting, jednak dodatkowo optymalizuje przetwarzanie cech kategorycznych i zmniejsza ryzyko przeuczania wprowadzajac mechanizm uporządkowane wzmocnienie
+	\item \textbf{CatBoost} - podobnie jak XGBoost opiera się na drzewach decyzyjnych i metodzie gradient boosting, jednak dodatkowo optymalizuje przetwarzanie cech kategorycznych i zmniejsza ryzyko przeuczania wprowadzając mechanizm uporządkowane wzmocnienie~\cite{CatBoostDocs2025}.
 
-	\item \textbf{LightBoost} - również bazuje na drzewach decyzyjnych, jednak w procesie uczenia nie tworzy całych nowych drzew, lecz rozwija istniejące liście tych drzew, które posiadają najwyższą wartość funkcji straty.
-
+	\item \textbf{LightBoost} - również bazuje na drzewach decyzyjnych, jednak w procesie uczenia nie tworzy całych nowych drzew, lecz rozwija istniejące liście tych drzew, które posiadają najwyższą wartość funkcji straty~\cite{LightGBMdocs2025}.
 \end{itemize}
 
+Modele boostingowe posiadają porównywalnie większą ilość parametrów w porównaniu do pozostałych klasyfikatorów, wynika to z faktu że opierają one swoją budowę na drzewach decyzyjnych, co oznacza że dziedziczą wszystkie ich parametry. Ze względu na swoje szeregowe działanie i proces nauki opierają się na iteracyjnym zmniejszaniu funkcji strat, modele boostingowe posiadają szereg parametrów z tym związanych. Parametr \textit{n estimators} podobnie jak w lesie losowym, definiuje maksymalną liczbę drzew decyzyjnych, które mają zostać użyte w modelu, \textit{min split gain} określa minimalną redukcję funckji strat jaka musi powstać celem powstania nowego węzła. Ten typ modeli, posiada także parametry służące redukcji przeuczanie modelu. \textit{Subsample} definiuje jaki procent danych ma zostać użyty przy budowie każdego z drzew, \textit{reg alpha} oraz \textit{reg lambda} służą do określenia mocy regulacji L1 i L2 które nakładają dodatkowe kary za predykcje modelu.
+
 \section{Sieci neuronowe}
+Sieci neuronowe stanowią jedną z najważniejszych metod współczesnego uczenia maszynowego, umożliwiając modelowanie złożonych relacji wejściowo-wyjściowych dzięki warstwowemu przekształcaniu wektora wejściowego. Ich istotną zaletą jest także możliwość pominięcia etapu ręcznego wyboru wektora cech poprzez zastosowanie głębokiego uczenia, które pozwala na automatyczne wyodrębnianie reprezentacji danych na kolejnych poziomach abstrakcji.\\
+
 Neuron, będący podstawowym elementem sztucznej sieci neuronowej, jest inspirowany budową i działaniem neuronów biologicznych występujących w ośrodkowym układzie nerwowym. Komórki nerwowe pełnią funkcję przekaźników impulsów elektrycznych - odbierają, przetwarzają i przekazują sygnały.\\
 
-Neuron matematyczny jest układem typu MISO (Multiple Input, Single Output), który sumuje otrzymane sygnały wejściowe po uprzednim przemnożeniu ich przez odpowiadające im wagi. Do takiej zsumowanej wartości dodawany jest składnik stały, zwany biasem. Ostatecznie wynik ten podawany jest na wejście funkcji aktywacji, której celem jest wprowadzenie nieliniowości do modelu\cite{hertz1993}.
+Neuron matematyczny jest układem typu MISO (ang. \english{Multiple Input, Single Output}), który sumuje otrzymane sygnały wejściowe po uprzednim przemnożeniu ich przez odpowiadające im wagi. Do takiej zsumowanej wartości dodawany jest składnik stały, zwany biasem. Ostatecznie wynik ten podawany jest na wejście funkcji aktywacji, której celem jest wprowadzenie nieliniowości do modelu~\cite{hertz1993}.
 
 
 
@@ -826,23 +952,29 @@ Sygnał wyjściowy z pojedyńczego neuronu można wyznaczyć za pomocą wzoru:
 	y = f\left( \sum_{i=1}^{\text{N}} w_i x_i + \text{b} \right),
 \end{equation}
 
-gdzie:
+\noindent gdzie:
 \begin{itemize}
 	\item $y$ - sygnał wyjściowy,
 	\item $f(\cdot)$ - funkcja aktywacji,
 	\item N - liczba wejść,
 	\item $x_i$ - sygnał wejściowy dla $i$-tego wejścia,
 	\item $w_i$ - waga przypisana do $i$-tego sygnału wejściowego,
-	\item b - składnik stały,
+	\item b - składnik stały.
 \end{itemize}
 
 
-Organizując neurony warstwowo, tworzymy sieć neuronową. Sieć posiada warstwę wejściową, która przyjmuje dane - liczba neuronów w tej warstwie odpowiada liczbie wymiarów danych wejściowych. Kolejne warstwy nazywane są warstwami ukrytymi, ponieważ nie mamy bezpośredniego dostępu do ich wyjść. Ostatnia warstwa to warstwa wyjściowa, w której liczba neuronów odpowiada liczbie klas w problemie klasyfikacji lub liczbie wartości przewidywanych w problemie regresji.\\
+Organizując neurony warstwowo, tworzymy sieć neuronową. Sieć posiada warstwę wejściową, która przyjmuje dane - liczba neuronów w tej warstwie odpowiada liczbie wymiarów danych wejściowych. Kolejne warstwy nazywane są warstwami ukrytymi, ponieważ nie mamy bezpośredniego dostępu do ich wyjść. Ostatnia warstwa to warstwa wyjściowa, w której liczba neuronów odpowiada liczbie klas w problemie klasyfikacji lub liczbie wartości przewidywanych w problemie regresji~\cite{ksiazka_sieci_algorytmy}.\\
 
 
 
 
-\begin{figure}[h!]
+
+
+Nauka sieci neuronowych polega na iteracyjnej aktualizacji wag neuronów w celu minimalizacji funkcji błędu. Proces ten rozpoczyna się od przypisania początkowych wartości wag, które zazwyczaj wybierane są quasi-losowo - jako niewielkie liczby o rozkładzie normalnym. Taki wybór ma na celu zapewnienie różnorodności w początkowym uczeniu się neuronów. Istnieją jednak również bardziej zaawansowane metody inicjalizacji, które uwzględniają właściwości funkcji aktywacji w poszczególnych warstwach sieci.\\
+
+W każdym kroku procesu uczenia dane ze zbioru treningowego są przetwarzane przez sieć neuronową za pomocą algorytmu propagacji w przód. Na podstawie uzyskanych wyników obliczana jest wartość błędu przy użyciu funkcji straty, która określa sposób kwantyfikacji rozbieżności między przewidywaniami modelu a rzeczywistymi wartościami. Następnie wykorzystywany jest optymalizator, który - na podstawie gradientów obliczanych przy pomocy algorytmu propagacji wstecz wyznacza nowe wartości wag neuronów. Ostatecznym etapem jest aktualizacja wag w całej sieci. Proces ten jest powtarzany przez ustaloną liczbę iteracji lub do momentu spełnienia zdefiniowanego warunku stopu~\cite{ksiazka_sieci}.
+\newpage
+\begin{figure}[!h]
 	\centering
 	\begin{tikzpicture}[
 		node distance=0.5cm and 2cm,
@@ -877,17 +1009,14 @@ Organizując neurony warstwowo, tworzymy sieć neuronową. Sieć posiada warstw�
 	\caption{Schemat procesu uczenia sieci neuronowej}
 \end{figure}
 
-Nauka sieci neuronowych polega na iteracyjnej aktualizacji wag neuronów w celu minimalizacji funkcji błędu. Proces ten rozpoczyna się od przypisania początkowych wartości wag, które zazwyczaj wybierane są quasi-losowo - jako niewielkie liczby o rozkładzie normalnym. Taki wybór ma na celu zapewnienie różnorodności w początkowym uczeniu się neuronów. Istnieją jednak również bardziej zaawansowane metody inicjalizacji, które uwzględniają właściwości funkcji aktywacji w poszczególnych warstwach sieci.\\
-W każdym kroku procesu uczenia dane ze zbioru treningowego są przetwarzane przez sieć neuronową za pomocą algorytmu propagacji w przód. Na podstawie uzyskanych wyników obliczana jest wartość błędu przy użyciu funkcji straty, która określa sposób kwantyfikacji rozbieżności między przewidywaniami modelu a rzeczywistymi wartościami. Następnie wykorzystywany jest optymalizator, który - na podstawie gradientów obliczanych przy pomocy algorytmu propagacji wstecz wyznacza nowe wartości wag neuronów. Ostatecznym etapem jest aktualizacja wag w całej sieci. Proces ten jest powtarzany przez ustaloną liczbę epok lub do momentu spełnienia zdefiniowanego warunku stopu.
-\newpage
 Wraz z rozwojem sieci neuronowych powstały bardziej złożone sposoby przetwarzania danych. W badaniach wykorzystano następujące typy warstw sieci neuronowych:
 \begin{itemize}
 	\item Warstwy gęste - klasyczne warstwy w pełni połączone, w których każdy neuron jest połączony z każdym neuronem warstwy kolejnej. Są najczęściej stosowane w prostych sieciach oraz jako warstwy końcowe w bardziej złożonych architekturach.
 
-	\item Warstwy konwolucyjne - przetwarzają dane wejściowe za pomocą filtrów konwolucyjnych, które działają lokalnie w obrębie małych fragmentów danych wejściowych, zgodnie z przesuwającym się jądrem. Podczas procesu uczenia, wartości wag jądra są aktualizowane, co pozwala na automatyczne wykrywanie cech. Często stosowanym mechanizmem pomocniczym jest warstwa poolingowa, której zadaniem jest redukcja wymiarowości danych oraz zwiększenie odporności na przesunięcia i zakłócenia.
+	\item Warstwy konwolucyjne (splotowe, ang. \english{Convolutional neural network} - CNN) - przetwarzają dane wejściowe za pomocą filtrów konwolucyjnych, które działają lokalnie w obrębie małych fragmentów danych wejściowych, zgodnie z przesuwającym się filtrem. Podczas procesu uczenia, wartości wag jądra są aktualizowane, co pozwala na automatyczne wykrywanie cech. Często stosowanym mechanizmem pomocniczym jest warstwa poolingowa, której zadaniem jest redukcja wymiarowości danych oraz zwiększenie odporności na przesunięcia i zakłócenia.
 	      Zastosowanie warstw konwolucyjnych umożliwiło rozwój głębokiego uczenia, eliminując konieczność ręcznego projektowania wektora cech przez inżynierów.
 
-	\item Warswy LSTM - specjalny typ rekurencyjnych warstw neuronowych zaprojektowany w celu ograniczenia problemu zanikających gradientów, czyli zjawiska, w którym wartości gradientów w początkowych warstwach stają się bardzo małe, co prowadzi do niestabilności i spowolnienia procesu uczenia. Warstwy LSTM wprowadzają pamięć krótkotrwałą, która jest kontrolowana przez trzy rodzaje bramek: wejściową, wyjściową oraz zapominającą. Bramki te regulują przepływ informacji do, z oraz w obrębie komórki pamięci, co umożliwia skuteczne przechowywanie i aktualizowanie informacji w czasie. Dzięki temu model jest w stanie uczyć się zależności sekwencyjnych na dłuższych dystansach czasowych. Choć mechanizm LSTM znacząco ogranicza problem zanikania gradientów, nadal może wystąpić zjawisko eksplodujących gradientów. Warstwy te są szczególnie przydatne podczas przewidywania szeregów czasowych.
+	\item Warstwy LSTM (ang. \english{Long Short-Term Memory}) - specjalny typ rekurencyjnych warstw neuronowych zaprojektowany w celu ograniczenia problemu zanikających gradientów, czyli zjawiska, w którym wartości gradientów w początkowych warstwach stają się bardzo małe, co prowadzi do niestabilności i spowolnienia procesu uczenia. Warstwy LSTM wprowadzają pamięć krótkotrwałą, która jest kontrolowana przez trzy rodzaje bramek: wejściową, wyjściową oraz zapominającą. Bramki te regulują przepływ informacji do, z oraz w obrębie komórki pamięci, co umożliwia skuteczne przechowywanie i aktualizowanie informacji w czasie. Dzięki temu model jest w stanie uczyć się zależności sekwencyjnych na dłuższych dystansach czasowych. Choć mechanizm LSTM znacząco ogranicza problem zanikania gradientów, nadal może wystąpić zjawisko eksplodujących gradientów. Warstwy te są szczególnie przydatne podczas przewidywania szeregów czasowych.
 \end{itemize}
 Tworząc sieć neuronową, inżynier musi dostosować hiperparametry, które determinują zarówno strukturę sieci, jak i sposób jej uczenia. Hiperparametry dzielą się na dwie główne kategorie:
 \begin{enumerate}
@@ -900,7 +1029,7 @@ Tworząc sieć neuronową, inżynier musi dostosować hiperparametry, które det
 	      \end{enumerate}
 	\item Hiperparametry związane z procesem uczenia:
 	      \begin{enumerate}
-		      \item Liczba epok - warunek stopu związany z ilością prztworzeń zbiorzu uczącego,
+		      \item Liczba iteracji - warunek stopu związany z ilością przetworzeń zbiorzu uczącego,
 		      \item Funkcja strat - miara błędu wykorzystywana przez optymalizator do aktualizacji wag,
 		      \item Optymalizator -  algorytm obliczający gradienty, wyznacza nowe wagi podczas procesu nauki.
 		      \item Wielkość wsadu - liczba próbek przetwarzanych jednocześnie w jednej iteracji,
@@ -908,30 +1037,29 @@ Tworząc sieć neuronową, inżynier musi dostosować hiperparametry, które det
 	      \end{enumerate}
 \end{enumerate}
 
-Proces wyboru hiperparametrów jest kluczowy dla uzyskania modelu o wysokiej skuteczności. Wraz ze zwiększaniem liczby warstw sieci oraz liczby neuronów, rośnie zdolność modelu do reprezentowania złożonych zależności, co prowadzi do zmniejszenia błędu biasu. Jednak bardziej złożone modele posiadają większy rozrzut wyników co skutkuje wzrostem wariancji
+Proces wyboru hiperparametrów jest kluczowy dla uzyskania modelu o wysokiej skuteczności. Wraz ze zwiększaniem liczby warstw sieci oraz liczby neuronów, rośnie zdolność modelu do reprezentowania złożonych zależności, co prowadzi do zmniejszenia błędu obciążenia. Jednak bardziej złożone modele posiadają większy rozrzut wyników, co skutkuje wzrostem wariancji.
 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.8\textwidth]{img/r3/Bias_and_variance_tradeoff.png}
-	\caption{Zależność pomiędzy wariancją a biasem w funkcji złożoności modelu\cite{bigbossfarin2021}}
+	\caption{Zależność pomiędzy wariancją a obciążeniem w funkcji złożoności modelu~\cite{bigbossfarin2021}}
 	\label{bias-variance tradeoff}
 \end{figure}
-\newpage
-Wykres przedstawia \ref{bias-variance tradeoff} kompromis obciążeniowo-wariacyjny (bias-variance tradeoff) w funkcji złożoności modelu. Przy niskiej złożoności model nie jest w stanie dobrze odwzorować zależności w zbiorze uczącym - mamy wówczas do czynienia z niedouczeniem oraz wysokim błędem obciążenia. Wraz ze wzrostem złożoności modelu błąd obciążenia maleje, a jakość predykcji rośnie. Jednak dalsze zwiększanie złożoności prowadzi do wzrostu błędu wariancji, ponieważ model zaczyna uczyć się również szumu obecnego w danych, co skutkuje przeuczeniem i utratą zdolności generalizacji. W takiej sytuacji mimo niskiego błędu obciążenia, wysoka wariancja obniża skuteczność modelu. Optymalny punkt znajduje się tam, gdzie suma błędu obciążenia i wariancji jest najmniejsza - w tym miejscu model osiąga najlepszą równowagę między niedouczeniem a przeuczeniem.
+Wykres na rys.~\ref{bias-variance tradeoff} kompromis obciążeniowo-wariacyjny (ang. \english{bias-variance tradeoff}) w funkcji złożoności modelu. Przy niskiej złożoności model nie jest w stanie dobrze odwzorować zależności w zbiorze uczącym - mamy wówczas do czynienia z niedouczeniem oraz wysokim błędem obciążenia. Wraz ze wzrostem złożoności modelu błąd obciążenia maleje, a jakość predykcji rośnie. Jednak dalsze zwiększanie złożoności prowadzi do wzrostu błędu wariancji, ponieważ model zaczyna uczyć się również szumu obecnego w danych, co skutkuje przeuczeniem i utratą zdolności generalizacji. W takiej sytuacji mimo niskiego błędu obciążenia, wysoka wariancja obniża skuteczność modelu. Optymalny punkt znajduje się tam, gdzie suma błędu obciążenia i wariancji jest najmniejsza - w tym miejscu model osiąga najlepszą równowagę między niedouczeniem a przeuczeniem~\cite{Stapor2008}.
 
 
-\section{Miary jakościowe klasyfikatorów}
+\section{Miary jakościowe do oceny klasyfikatorów}
 W celu efektywnego porównywania modeli predykcyjnych konieczne jest zastosowanie odpowiednich miar oceny jakości, które umożliwiają liczbową ocenę skuteczności działania danego modelu w określonym kontekście. Dobór metryk powinien być dostosowany do charakteru problemu - inne miary stosuje się w przypadku klasyfikacji, inne przy lokalizacji obiektów, a jeszcze inne przy zadaniach regresyjnych.\\
 
-Aby właściwie zrozumieć sposób działania metryk stosowanych w klasyfikacji binarnej, należy w pierwszej kolejności zdefiniować cztery możliwe wyniki predykcji:
+Aby właściwie zrozumieć sposób działania metryk stosowanych w klasyfikacji binarnej, należy w pierwszej kolejności zdefiniować cztery możliwe wyniki predykcji~\cite{larner2022matrix}:
 \begin{itemize}
-	\item \textbf{True Positive (TP)} - poprawna klasyfikacja przypadku z arytmią serca jako przypadek chorobowy.
-	\item \textbf{False Positive (FP)} - błędna klasyfikacja przypadku zdrowego jako przypadek z arytmią. Nazywana również błędem pierwszego rodzaju.
-	\item \textbf{True Negative (TN)} - poprawna klasyfikacja przypadku zdrowego jako niechorobowego.
-	\item \textbf{False Negative (FN)} - błędna klasyfikacja przypadku z arytmią jako przypadek zdrowy. Nazywana również błędem drugiego rodzaju.
+	\item \textbf{True Positive (TP)} -- poprawna klasyfikacja przypadku z arytmią serca jako przypadek chorobowy.
+	\item \textbf{False Positive (FP)} -- błędna klasyfikacja przypadku zdrowego jako przypadek z arytmią. Nazywana również błędem pierwszego rodzaju.
+	\item \textbf{True Negative (TN)} -- poprawna klasyfikacja przypadku zdrowego jako niechorobowego.
+	\item \textbf{False Negative (FN)} -- błędna klasyfikacja przypadku z arytmią jako przypadek zdrowy. Nazywana również błędem drugiego rodzaju.
 \end{itemize}
-Dzięki wyznaczeniu 4 przypadów, jestesmy w stanie w graficzny sposób przedstawić wyniki klasyfikacji w postaci macierzy pomyłek.
 
+Dzięki wyznaczeniu 4 przypadów, możliwe jest w graficzny sposób przedstawienie wyników klasyfikacji w postaci macierzy pomyłek.
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.5\textwidth]{img/r3/error_matrix.png}
@@ -939,82 +1067,87 @@ Dzięki wyznaczeniu 4 przypadów, jestesmy w stanie w graficzny sposób przedsta
 	\label{fig:etykieta-rysunku}
 \end{figure}
 
-Wykorzystując wymieniane przypadki, jesteśmy w stanie wyznaczyć metryki jakościowe, które pozwalają na ocenę skuteczności klasyfikatora.
+Wykorzystując wymieniane przypadki, można wyznaczyć metryki jakościowe, które pozwalają na ocenę skuteczności klasyfikatora~\cite{Fukunaga1990}.
 
 \begin{itemize}
-	\item \textbf{Dokładność} - metryka określająca jaki procent przypadków został poprawnie sklasyfikowany. Jest to metryka która jest mocno zalezna od rozkładu klasy. W sytuacji gdy jedna klasas jest znacznie liczniejsza, może ona mocno zakrzywić wyniki. W przypadku klasyfykacji binarnej możemy ją wyznaczyć jako:
+	\item \textbf{Dokładność (ang. \english{Accuracy})} -- metryka określająca jaki procent przypadków został poprawnie sklasyfikowany. Jest to metryka która jest mocno zależna od rozkładu klasy. W sytuacji gdy jedna klasa jest znacznie liczniejsza, może ona mocno zakrzywić wyniki. W przypadku klasyfykacji binarnej możemy ją wyznaczyć jako:
 	      \begin{equation}
-		      \text{Accuracy} = \frac{\text{TP + TN}}{\text{TP + FP + TN + FN}}
+		      \text{Acc} = \frac{\text{TP + TN}}{\text{TP + FP + TN + FN}}.
 	      \end{equation}
 
-	\item \textbf{Precyzja} - miara jakościowa określającą jaki procent przypadków sklasyfikowanych jako osoby z chorobą rzeczywiscie posiadaja arytmię. Prezycja nie zwraca uwagi na przypadki zdrowę, zwraca uwagę jedynie na przypadki z arytmią. Omawianą miarę możemy obliczyć jako:
+	\item \textbf{Precyzja (ang. \english{Precision})} -- miara jakościowa określającą jaki procent przypadków sklasyfikowanych jako osoby z chorobą rzeczywiście posiadaja arytmię. Precyzja nie zwraca uwagi na przypadki zdrowę, zwraca uwagę jedynie na przypadki z arytmią. Omawianą miarę możemy obliczyć jako:
 	      \begin{equation}
-		      \text{Precision} = \frac{\text{TP}}{\text{TP + FP}}
+		      \text{Prec} = \frac{\text{TP}}{\text{TP + FP}}.
 	      \end{equation}
 
-	\item \textbf{Swoistość} - określa umiejętność detekcji zdrowych pacejntów bez arytmi. Matematycznie możemy zapisać to jako:
+	\item \textbf{Swoistość (ang. \english{Specificity}) } -- określa umiejętność detekcji zdrowych pacjentów bez arytmi. Matematycznie możemy zapisać to jako:
 
 	      \begin{equation}
-		      \text{Specificity} = \frac{\text{TN}}{\text{TN + FP}}
+		      \text{Spec} = \frac{\text{TN}}{\text{TN + FP}}.
 	      \end{equation}
-	\item \textbf{Czułość} - prawdopodobieństwo ze klasyfikacja będzie poprawna pod warunkiem że dana próbka pochodzi od osoby chorej. Można ją obliczyć ze wzoru:
+	\item \textbf{Czułość (ang. \english{Recall})} -- prawdopodobieństwo ze klasyfikacja będzie poprawna pod warunkiem że dana próbka pochodzi od osoby chorej. Można ją obliczyć ze wzoru:
 
 	      \begin{equation}
-		      \text{Recall} = \frac{\text{TP}}{\text{TP + FN}}
-	      \end{equation}
-
-
-	\item \textbf{F-miara} - metryka która łaczy prezycję i czułosć. Wyznacza się jako średnią harmoniczną owych metryk. Ze względu na to, jest ona bardzo wrażliwa na przypadki gdy jedna z metryk jest bardzo niska. Jednak jest ona odporna na nierówny rozkład klas. Wartość F-miary możemy wyznaczyć jako:
-
-	      \begin{equation}
-		      \text{F}_1 = \frac{1}{2} \left( \frac{1}{\text{precision}} + \frac{1}{\text{recall}} \right) = \frac{2 \cdot \text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}} = \frac{\text{2TP}}{\text{2TP + FP + FN}}
+		      \text{Rec} = \frac{\text{TP}}{\text{TP + FN}}.
 	      \end{equation}
 
 
-	\item \textbf{współczynnika korelacji Matthews'a (MCC)} - miara korelacji binarnej wprowadzona do uczenia maszynowego przez Briana W. Matthewsa~\cite{matthews1975}. Zakres tego współczynnika wynosi od $-1$ do $1$, gdzie $1$ oznacza perfekcyjną klasyfikację, $0$ klasyfikację losową, a $-1$ - całkowicie odwrotną predykcję. MCC jest wskaźnikiem jakościowym odpornym na niezbalansowanie klas i można go obliczyć według wzoru:
+	\item \textbf{F-miara (ang. \english{F-score})} - metryka która łączy prezycję i czułosć. Wyznacza się jako średnią harmoniczną owych metryk. Ze względu na to, jest ona bardzo wrażliwa na przypadki gdy jedna z metryk jest bardzo niska. Jednak jest ona odporna na nierówny rozkład klas. Wartość F-miary możemy wyznaczyć jako:
 
 	      \begin{equation}
-		      \text{MCC} = \frac{\text{TP} \cdot \text{TN} - \text{FP} \cdot \text{FN}}{\sqrt{(\text{TP} + \text{FP})(\text{TP} + \text{FN})(\text{TN} + \text{FP})(\text{TN} + \text{FN})}}
+		      \text{F}_1 = \frac{1}{2} \left( \frac{1}{\text{precision}} + \frac{1}{\text{recall}} \right) = \frac{2 \cdot \text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}} = \frac{\text{2TP}}{\text{2TP + FP + FN}}.
 	      \end{equation}
 
-	\item \textbf{Krzywa ROC} \cite{altman1994, brown2006roc, fawcett2006} - graficzne przedstawienie wydajności modelu klasyfikacyjnego w zadaniu klasyfikacji binarnej, w zależności od wartości progu decyzyjnego. Wykres ten ukazuje zależność między czułością a 1 - swoistością.
+
+	\item \textbf{Współczynnika korelacji Matthewsa (ang. \english{Matthews Correlation Coefficient} -- MCC)} - miara korelacji binarnej wprowadzona do uczenia maszynowego przez Briana W. Matthewsa~\cite{matthews1975}. Zakres tego współczynnika wynosi od $-1$ do $1$, gdzie $1$ oznacza perfekcyjną klasyfikację, $0$ klasyfikację losową, a $-1$ - całkowicie odwrotną predykcję. MCC jest wskaźnikiem jakościowym odpornym na niezbalansowanie klas i można go obliczyć według wzoru:
+
+	      \begin{equation}
+		      \text{MCC} = \frac{\text{TP} \cdot \text{TN} - \text{FP} \cdot \text{FN}}{\sqrt{(\text{TP} + \text{FP})(\text{TP} + \text{FN})(\text{TN} + \text{FP})(\text{TN} + \text{FN})}}.
+	      \end{equation}
+
+	\item \textbf{Krzywa ROC (ang. \english{Receiver Operating Characteristic})}~\cite{altman1994, brown2006roc, fawcett2006} - graficzne przedstawienie wydajności modelu klasyfikacyjnego w zadaniu klasyfikacji binarnej, w zależności od wartości progu decyzyjnego. Wykres ten ukazuje zależność między czułością, nazywaną też TPR (ang. \english{True Positive Rate})   a (1 - swoistością), nazywaną FPR (ang. \english{False Positive Rate}).
+	      Krzywa ROC służy do oceny oraz porównywania jakości klasyfikatorów, a także do wyboru odpowiedniego progu decyzyjnego, od którego próbki są przypisywane do klasy pozytywnej.
+	      \newpage
 
 	      \begin{figure}[!h]
 		      \centering
 		      \includegraphics[width=1\textwidth]{img/r4/Krzywa_ROC.png}
-		      \caption{Wykres krzywej ROC \cite{solecki2025roc}}
+		      \caption{Wykres krzywej ROC~\cite{solecki2025roc}}
 		      \label{fig:etykieta-rysunku}
 	      \end{figure}
 
-	      Krzywa ROC służy do oceny oraz porównywania jakości klasyfikatorów, a także do wyboru odpowiedniego progu decyzyjnego, od którego próbki są przypisywane do klasy pozytywnej.
+
 
 	      W najlepszym przypadku krzywa ROC przechodzi przez punkt (0,0) i (0,1), co oznacza, że klasyfikator osiąga 100\% czułości (brak fałszywie negatywnych wyników) oraz 100\% swoistości (brak fałszywie pozytywnych wyników). Taki model zawsze dokonuje poprawnych predykcji i uznawany jest za idealny.
-	      \newpage
 	      Wraz z pogorszeniem jakości klasyfikatora krzywa ROC zbliża się do przekątnej łączącej punkty (0,0) i (1,1). Taka linia reprezentuje model losowy - jego predykcje są statystycznie równoważne zgadywaniu, niezależnie od przyjętego progu decyzyjnego. W takiej sytuacji model uznaje się za nieskuteczny.
 
 	      W skrajnie niekorzystnym przypadku, gdy krzywa ROC znajduje się poniżej tej przekątnej, oznacza to, że klasyfikator częściej się myli, niż przewiduje poprawnie. Paradoksalnie, odwrócenie jego predykcj poprawia skuteczność klasyfikacji.
 
 	      Wraz ze zmniejszaniem wartości progu decyzyjnego rośnie czułość modelu, co oznacza spadek liczby błędów drugiego rodzaju. Jednocześnie jednak rośnie liczba błędów pierwszego rodzaju - fałszywie pozytywnych wyników. Z kolei zwiększanie progu skutkuje sytuacją odwrotną: poprawia się swoistość, ale kosztem spadku czułości.
 
-	      Taką sytuacje określa się jako kompromis między czułością a swoistością. Optymalny próg zależy od charakterystyki problemu oraz kosztów błędnych decyzji. W zastosowaniach medycznych często preferuje się modele o wysokiej czułości, aby ograniczyć liczbę niewykrytych przypadków choroby, nawet kosztem większej liczby fałszywych alarmów.
+	      Taką sytuację określa się jako kompromis między czułością a swoistością. Optymalny próg zależy od charakterystyki problemu oraz kosztów błędnych decyzji. W zastosowaniach medycznych często preferuje się modele o wysokiej czułości, aby ograniczyć liczbę niewykrytych przypadków choroby, nawet kosztem większej liczby fałszywych alarmów.
 
-	      Wykorzystując krzywą ROC, możliwe jest oblicznie pod nią. Taka matryka nazywa się \textbf{AUC}. Jest ona zależna i od czułości i od swoistości, wiec jest nie ma nią wpływu niezbalansowanie klas. Jednak,  AUC może prowadzić do mylących wniosków w przypadku przecinających się krzywych ROC, gdzie jednej model może być lepsza w jednym zakresie wartości progu decyzyjnego, a gorsza w innym. W takich sytuacjach wykorzystuje się analizę fragmentaryczną\cite{mcclish1989roc}
+	      Wykorzystując krzywą ROC, możliwe jest obliczenie pod nią. Taka matryka nazywa się \textbf{AUC}. Jest ona zależna i od czułości i od swoistości, więc nie ma na nią wpływu niezbalansowanie klas. Jednak,  AUC może prowadzić do mylących wniosków w przypadku przecinających się krzywych ROC, gdzie jeden model może być lepsza w jednym zakresie wartości progu decyzyjnego, a gorsza w innym. W takich sytuacjach wykorzystuje się analizę fragmentaryczną~\cite{mcclish1989roc}.
 
 
-	\item \textbf{Funkcja celu (FC)} - w celu ułatwienia porównań pomiędzy różnymi modelami klasyfikacyjnymi zaproponowano autorską metrykę, będącą średnią ważoną trzech niezależnych miar jakości klasyfikacji: swoistości, F-miary oraz współczynnika korelacji Matthews'a (MCC).
+	\item \textbf{Funkcja celu (FC)} - w celu ułatwienia porównania różnych modeli klasyfikacyjnych zaproponowano autorską metrykę stanowiącą średnią ważoną trzech niezależnych miar jakości klasyfikacji: swoistości, F-miary oraz współczynnika korelacji Matthewa. Nazwa ''Funkcja celu'' została przyjęta ze względu na fakt, że w procesie optymalizacji hiperparametrów modeli metryka ta podlega maksymalizacji i pełni rolę analogiczną do funkcji celu w programowaniu liniowym. Skrót FC pochodzi od pierwszych liter nazwy metryki.
+
+
+
+
 
 	      Ze względu na odmienny zakres wartości MCC (\mbox{-1} do 1), dokonano jego normalizacji do przedziału [0,1] według wzoru:
 	      \begin{equation}
-		      \text{nMCC} = \frac{\text{MCC} + 1}{2}
+		      \text{nMCC} = \frac{\text{MCC} + 1}{2}.
 	      \end{equation}
 	      Zaproponowano następujące wagi: 0.5 dla F-miary, 0.3 dla swoistości oraz 0.2 dla znormalizowanego MCC. Wszystkie składowe funkcji celu przyjmują wartości z zakresu [0,1], co zapewnia ich porównywalność oraz umożliwia interpretację FC jako skali ogólnej jakości klasyfikatora.
 
 	      Funkcję celu definiuje wzór:
 	      \begin{equation}
-		      \text{FC} = 0.5 \cdot F_1 + 0.3 \cdot \text{Spec} +  0.2 \cdot \text{nMCC}
+		      \text{FC} = 0.5 \cdot F_1 + 0.3 \cdot \text{Spec} +  0.2 \cdot \text{nMCC}.
 	      \end{equation}
 
-	      Opisana funkcja celu, zostanie także wykorzystana jako parametr optymalizacji hiperparametrów, który będzie maksymalizowano podczas eksperymentów.
+	      Opisana funkcja celu zostanie także wykorzystana jako parametr optymalizacji hiperparametrów, który będzie maksymalizowany podczas eksperymentów.
 
 \end{itemize}
 
@@ -1034,32 +1167,34 @@ Wykorzystując wymieniane przypadki, jesteśmy w stanie wyznaczyć metryki jako�
 
 \chapter{Przetwarzanie i wybrane zbiory danych}
 \section{Przegląd wykorzystanych zbiorów danych}
-TODO - napisać coś tutaj
-\subsection{MIMIC PERform AF Dataset}
-Zbiór danych MIMIC PERform AF\cite{mimic_perform_af} został pozyskany z bazy MIMIC-III Waveform Database Matched Subset\cite{mimiciii_waveform_matched}. Zawiera on 20-minutowe zapisy sygnałów fotopletyzmograficznych oraz elektrokardiograficznych, zarejestrowane u 35 ciężko chorych dorosłych pacjentów hospitalizowanych na oddziałach intensywnej terapii. U 19 z tych pacjentów zdiagnozowano migotanie przedsionków, natomiast u pozostałych zapis sygnałów nie wykazywał nieprawidłowości w rytmie serca. Dane zostały zebrane z wykorzystaniem monitora przyłóżkowego, z częstotliwością próbkowania wynoszącą 125 Hz.
+W zasobach internetowych dostępnych jest wiele baz danych oferujących bezpłatny dostęp do sygnałów wykorzystywanych w badaniach naukowych lub udostępnionych w celach edukacyjnych. Dzięki temu możliwa jest staranna selekcja źródeł danych. Wybrane bazy powinny zawierać szczegółowo opisane sygnały, opatrzone odpowiednimi etykietami określającymi rodzaj arytmii występującej w danym fragmencie. Opis powinien obejmować także zanonimizowane informacje o pacjencie, takie jak numer identyfikacyjny, umożliwiający prawidłowe rozdzielenie sygnałów. Ponadto, konieczne jest uwzględnienie w nim wszelkich zastosowanych przekształceń wstępnych oraz podanie częstotliwości próbkowania.
 
-\subsection{Zbiór PPG według Liu, Zengding i Zhou et al.}
-Dane wykorzystywane w tym zbiorze\cite{liu2022multiclass} zostały zebrane w okresie od marca 2020 do marca 2021 w szpitalu Fuwai w Pekinie, będącym wyspecjalizowaną placówką w zakresie chorób sercowo-naczyniowych. Sygnał fotopletyzmograficzny został początkowo próbkowany z częstotliwością 250 Hz, a następnie poddany procesowi resamplingu do 100 Hz. W celu usunięcia niepożądanych zakłóceń zastosowano filtrację pasmową w zakresie 0.5 - 50 Hz. Przefiltrowany sygnał został następnie podzielony na segmenty 10-sekundowe, przy czym fragmenty zawierające istotne zakłócenia zostały odrzucone.
+\subsection*{MIMIC PERform AF Dataset}
+Zbiór danych MIMIC PERform AF~\cite{mimic_perform_af} został pozyskany z bazy MIMIC-III Waveform Database Matched Subset~\cite{mimiciii_waveform_matched}. Zawiera on 20-minutowe zapisy sygnałów fotopletyzmograficznych oraz elektrokardiograficznych, zarejestrowane u 35 ciężko chorych dorosłych pacjentów hospitalizowanych na oddziałach intensywnej terapii. U 19 z tych pacjentów zdiagnozowano migotanie przedsionków, natomiast u pozostałych zapis sygnałów nie wykazywał nieprawidłowości w rytmie serca. Dane zostały zebrane z wykorzystaniem monitora przyłóżkowego, z częstotliwością próbkowania wynoszącą 125 Hz.
+
+\subsection*{Zbiór Liu Z.~\cite{liu2022multiclass}}
+Dane wykorzystywane w tym zbiorze zostały zebrane w okresie od marca 2020 do marca 2021 w szpitalu Fuwai w Pekinie, będącym wyspecjalizowaną placówką w zakresie chorób sercowo-naczyniowych. Sygnał fotopletyzmograficzny został początkowo próbkowany z częstotliwością 250 Hz, a następnie poddany procesowi resamplingu do 100 Hz. W celu usunięcia niepożądanych zakłóceń zastosowano filtrację pasmową w zakresie 0.5 - 50 Hz. Przefiltrowany sygnał został następnie podzielony na segmenty 10-sekundowe, przy czym fragmenty sygnału o niskiej wartości SNR lub zniekształcone np. w skutek ściągnięcia czyjnika PPG lub innych przyczyn zostały odrzucone.
 
 
 Cały zbiór danych obejmuje zapisy od 228 pacjentów, co odpowiada łącznie 118 217 segmentom 10-sekundowym. Na potrzeby badań publicznych udostępniono jedynie 46 827 z tych fragmentów. Dane zostały skategoryzowane według pięciu typów arytmii: przedwczesny skurcz komorowy, przedwczesny skurcz przedsionkowy, tachykardia komorowa, tachykardia nadkomorowa oraz migotanie przedsionków.
 
-\subsection{PhysioNet/CinC Challenge 2015}
-test\cite{physionet_challenge_2015} Jest zbiorem użytym w konkursie majacym na celu stworzenie algorytmu redukującego ilość fałszych alarmów podczas detekcji arytmii serca. Dane pochodzą z czterech losowo wybranch, szpitali w Stanach Zjednoczonych oraz Europie. Udostępniona część zbioru zawiera 750 nagrań. Sygnały zostały próbkowane z częstotliwością 250Hz oraz przefiltrowane filtrem pasmowym 0.05 - 40Hz
-\subsection{Dane syntetyczne}
-W celu wzbogacenia zbiorów danych, zdecydowano użyć się danych syntetycznych wygenerowanych przy użyciu generatora sygnałów PPG i ECG z epizodami arrytmi\cite{solosenko2022}. Zastosowany symulator umożliwia pełną kontrolę nad procesem generowania sygnałów. Użytkownik ma możliwość definiowania szeregu parametrów determinujących charakterystykę sygnału, w tym: rodzaj arrytmi, mediane dłguości epizodów arytmi, obciążenie arytmią które determinuje łączny czas kiedy występuje arytmia, wskaźnik przedwczesnychskurczów przedsionkowych czy rodzaj pulsu zdefiniowany przez Dawber et al\cite{dawber1973dicrotic}.
+\subsection*{PhysioNet/CinC Challenge 2015}
+Wybrany zbiór~\cite{physionet_challenge_2015} został użyty w konkursie mającym na celu stworzenie algorytmu redukującego ilość fałszywych alarmów podczas detekcji arytmii serca. Dane pochodzą z czterech losowo wybranych szpitali w Stanach Zjednoczonych oraz Europie. Udostępniona część zbioru zawiera 750 nagrań. Sygnały zostały próbkowane z częstotliwością 250Hz oraz przefiltrowane filtrem pasmowym 0.05 - 40Hz.
+\subsection*{Dane syntetyczne}
+W celu wzbogacenia zbiorów danych, zdecydowano użyć się danych syntetycznych wygenerowanych przy użyciu generatora sygnałów PPG i ECG z epizodami arytmii~\cite{solosenko2022}. Zastosowany symulator umożliwia pełną kontrolę nad procesem generowania sygnałów. Użytkownik ma możliwość definiowania szeregu parametrów determinujących charakterystykę sygnału, w tym: rodzaj arytmii, mediane dłguości epizodów arytmii, obciążenie arytmią, które determinuje łączny czas kiedy występuje arytmia, wskaźnik przedwczesnych skurczów przedsionkowych czy rodzaj pulsu zdefiniowany przez Dawber et al~\cite{dawber1973dicrotic}.
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=1\textwidth]{img/r4/symulator_GUI.png}
-	\caption{GUI użytego symulatora}
+	\includegraphics[width=0.8\textwidth]{img/r4/symulator_GUI.png}
+	\caption{GUI użytego symulatora~\cite{solosenko2022}}
 	\label{fig:etykieta-rysunku}
 \end{figure}\\
 
-W ramach eksperymentu wygenerowano pięć syntetycznych podzbiorów danych, z których każdy został zasymulowany z częstotliwością próbkowania równą 500 Hz oraz zawierał sygnały odpowiadające 500 kolejnym interwałom RR. Każdy ze zbiorów zawierał równą ilośc przypadków bradycardii, tachycardii i migotania przedsionków. Zawierał się w nich także każdy rodzaj pulsu PPG. Zdecydowano się nie wykorzystywać możliwości generowania sygnałów z szumem.
+W ramach eksperymentu wygenerowano pięć syntetycznych podzbiorów danych zawierających sygnały PPG (częstotliwość próbkowania 500Hz), odpowiadające 500 kolejnym interwałom RR (tj. 500 uderzeniom serca). Szerokość poszczególnych odcinków RR była zmienna i wyznaczana na podstawie dodatkowych parametrów specyficznych dla każdego zbioru. Każdy ze zbiorów zawierał równą ilość przypadków bradykardii, tachycardii i migotania przedsionków. Zawierał się w nich także każdy rodzaj pulsu PPG. Zdecydowano się nie wykorzystywać możliwości generowania sygnałów z szumem.
+\newpage
 
 Poszczególne podzbiory różniły się parametrami charakterystycznymi dla przebiegu arytmii:
 
-\begin{table}[ht]
+\begin{table}[!ht]
 	\centering
 	\caption{Porównanie parametrów podzbiorów danych syntetycznych}
 	\begin{tabular}{
@@ -1084,34 +1219,31 @@ Poszczególne podzbiory różniły się parametrami charakterystycznymi dla prze
 	\end{tabular}
 \end{table}
 
-Każdy ze zbiorów ma symulować inny rodzaj arytmi:
+Każdy ze zbiorów ma symulować inny rodzaj arytmii:
 \begin{itemize}
-	\item Zbiór 1 - Rzadkie występowanie krótkich epizodów arytmi
-	\item Zbiór 2 - Umiarkowane występowanie z umiarkowaną liczbą przedwczesnych skórczy
-	\item Zbiór 3 - Wysokie występowanie arytmi z krótkimi epizodami
-	\item Zbiór 4 - Długie, częste epizody arytmi.
-	\item Zbiór 5 - Niemal ciągła arytmia
+	\item Zbiór 1 - Rzadkie występowanie krótkich epizodów arytmii.
+	\item Zbiór 2 - Umiarkowane występowanie z umiarkowaną liczbą przedwczesnych skurczów.
+	\item Zbiór 3 - Wysokie występowanie arytmii z krótkimi epizodami.
+	\item Zbiór 4 - Długie, częste epizody arytmii.
+	\item Zbiór 5 - Niemal ciągła arytmia.
 \end{itemize}
 
 Dzięki zastosowanemu symulatorowi, wygenerowane dane syntetyczne mogą stanowić cenne źródło informacji dla przyszłych modeli klasyfikacyjnych. Umożliwiają one nie tylko lepsze zrozumienie przypadków odstających, ale również wspierają proces uczenia modeli w scenariuszach bardziej typowych, odpowiadających klasycznym przypadkom klinicznym.
 
 \section{Przetwarzanie wstępne}
-Pomimo wysokiej jakości wybranych zbiorów danych, ich bezpośrednie wykorzystanie w procesie klasyfikacji wymaga zastosowania wieloetapowego przetwarzania wstępnego. Głównym celem tych transformacji jest ujednolicenie charakterystyki sygnałów pochodzących z różnych źródeł oraz przygotowanie reprezentatywnego wektora cech, który może zostać wykorzystany w procesie uczenia klasyfikatorów.\\
+Pomimo wysokiej jakości wybranych zbiorów danych, ich bezpośrednie wykorzystanie w procesie klasyfikacji wymaga zastosowania wieloetapowego przetwarzania wstępnego. Głównym celem tych przekształceń jest ujednolicenie charakterystyki sygnałów pochodzących z różnych źródeł oraz przygotowanie reprezentatywnego wektora cech, który może zostać wykorzystany w procesie uczenia klasyfikatorów.\\
 
-\newpage
-Pierwszym etapem przetwarzania wstępnego sygnału jest jego filtracja. W tym celu zastosowano filtr pasmowo-przepustowy o częstotliwościach granicznych 0.5 Hz oraz 40 Hz. Głównym celem tak dobranego filtra jest eliminacja zakłóceń pochodzących spoza pasma istotnego z punktu widzenia analizy sygnałów PPG. Dolne ograniczenie pozwala zmniejszyć wpływ ruchu pacjenta czy zmiane położenia czujnika, natomiast górna granica redukuje wpływ wysokoczęstotliwościowych zakłóceń, takich jak zakłócenia elektromagnetyczne.\\
+Pierwszym etapem przetwarzania wstępnego sygnału jest jego filtracja. W tym celu zastosowano filtr pasmowo-przepustowy o częstotliwościach granicznych 0.5 Hz oraz 40 Hz. Głównym celem tak dobranego filtra jest eliminacja zakłóceń pochodzących spoza pasma istotnego z punktu widzenia analizy sygnałów PPG. Dolne ograniczenie pozwala zmniejszyć wpływ ruchu pacjenta czy zmiany położenia czujnika, natomiast górna granica redukuje wpływ wysokoczęstotliwościowych zakłóceń.\\
 
-Drugim istotnym etapem przetwarzania wstępnego była zmiana częstotliwości próbkowania sygnałów. Zdecydowano się na jednolitą częstotliwość 100 Hz, co odpowiada najniższej wartości występującej wśród wykorzystanych zbiorów danych. Ujednolicenie próbkowania do tej wartości niesie ze sobą kilka korzyści. Po pierwsze, redukcja liczby próbek skutkuje zmniejszeniem rozmiaru danych, co przekłada się na krótszy czas ich przetwarzania jak i nauki modeli w sposób bezcechowych.\\
+Drugim istotnym etapem przetwarzania wstępnego była zmiana częstotliwości próbkowania sygnałów. Zdecydowano się na jednolitą częstotliwość 100 Hz, co odpowiada najniższej wartości występującej wśród wykorzystanych zbiorów danych. Ujednolicenie próbkowania do tej wartości niesie ze sobą kilka korzyści. Po pierwsze, redukcja liczby próbek skutkuje zmniejszeniem rozmiaru danych, co przekłada się na krótszy czas ich przetwarzania jak i nauki modeli w sposób bezcechowy.\\
 
 Kolejnym krokiem w procesie przetwarzania wstępnego była normalizacja sygnału do przedziału $[0, 1]$. Wykorzystane zbiory danych charakteryzowały się zróżnicowanym zakresem wartości amplitud, co mogłoby negatywnie wpłynąć zarówno na proces uczenia cechowego, jak i bezcechowego. Niejednorodna skala danych może prowadzić do dominacji niektórych sygnałów lub cech w trakcie uczenia. W celu minimalizacji tego efektu, zdecydowano się na niezależną normalizację każdego sygnału osobno.\\
 
-Z uwagi na fakt, że zbiór danych opracowany przez Liu, Zengding i Zhou et al.\cite{liu2022multiclass} składa się z 10-sekundowych segmentów sygnału, zdecydowano o ujednoliceniu długości wszystkich pozostałych próbek poprzez ich podział na fragmenty o identycznym czasie trwania. Segmentacja została przeprowadzona po wcześniejszym przeskalowaniu częstotliwości próbkowania do 100 Hz, co oznacza, że każdy 10-sekundowy segment zawiera dokładnie 1000 próbek. Próbki te, zostaną wykorzytane do bezcechowej nauki klasyfikatorów.\\
+Z uwagi na fakt, że zbiór danych opracowany przez Liu, Zengding i Zhou et al.~\cite{liu2022multiclass} składa się z 10-sekundowych segmentów sygnału, zdecydowano o ujednoliceniu długości wszystkich pozostałych próbek poprzez ich podział na fragmenty o identycznym czasie trwania. Segmentacja została przeprowadzona po wcześniejszej decymacji sygnału do częstotliwości 100Hz, co oznacza, że każdy 10-sekundowy segment zawiera dokładnie 1000 próbek. Próbki te, zostaną wykorzystane do bezcechowej nauki klasyfikatorów.\\
 
-Ostatnim etapem przetwarznia wstępnego jest wybranie oraz ekstrakcja cech. Proces ten zostanie omówiony dokładnie w rozdziale \ref{Ekstrakcja cech}
+Ostatnim etapem przetwarznia wstępnego jest wybranie oraz ekstrakcja cech. Proces ten zostanie omówiony dokładnie w rozdziale~\ref{Ekstrakcja cech}
 
 \begin{figure}[!h]
-	\caption{Schemat przetwarznia wstępnego}
-
 	\begin{tikzpicture}
 		% Bloki
 		\node[draw, align=center, minimum width=2cm, minimum height=1.1cm] (B) at (0.5,0) {Filtr\\pasmowy};
@@ -1133,50 +1265,51 @@ Ostatnim etapem przetwarznia wstępnego jest wybranie oraz ekstrakcja cech. Proc
 		node[midway, above, align=center]{};
 		\draw[->] (11,-2.5) -- (14,-2.5)
 		node[midway, above, align=center]{Segmentowany\\sygnał};
-
 	\end{tikzpicture}
+	\caption{Schemat przetwarzania wstępnego}
 \end{figure}
 
-\newpage
 \section{Ekstrakcja cech}
 \label{Ekstrakcja cech}
-Zdecydowano się na wybór czterech głównych domen analizy, z których każda interpretuje sygnał PPG z innej perspektywy, umożliwiając wydobycie zróżnicowanych informacji. Niezależnie od wybranej domeny, we wszystkich przypadkach zastosowano zestaw podstawowych miar statystycznych, które zostały wyekstrahowane z przekształconych sygnałów:
+Zdecydowano się na wybór czterech głównych dziedzin analizy, z których każda interpretuje sygnał PPG z innej perspektywy, umożliwiając wydobycie zróżnicowanych informacji. Niezależnie od wybranej dziedziny, we wszystkich przypadkach zastosowano zestaw podstawowych miar statystycznych, które zostały wyekstrahowane z przekształconych sygnałów:
 \begin{itemize}
-	\item Średnia arytmetyczna,
-	\item Mediana,
-	\item Odchylenie standardowe,
-	\item Wariancja,
-	\item Rozstęp międzykwartylowy,
+	\item średnia arytmetyczna,
+	\item mediana,
+	\item odchylenie standardowe,
+	\item wariancja,
+	\item rozstęp międzykwartylowy.
 \end{itemize}
 
-\subsection{Cechy z domeny czasu}
-Pierwszą z wybranych domen, interpretuje sygnał jako funkcję ciągłą w czasie. Domena czasu trakuje kolejne próbki czasowe jako kolejne wartości funkcji aplitudy. Domena ta bezpośrednio analizuje sygnału w jej pierwotnej postaci, gdzie $x = \{x_1, x_2, \ldots, x_n\}$. W tej przestrzeni, zdecydowano się na wybranie następujących cech:
+\subsection*{Cechy z dziedziny czasu}
+Pierwszą z wybranych dziedzin, interpretuje sygnał jako funkcję ciągłą w czasie. Dziedzina czasu traktuje kolejne próbki czasowe jako kolejne wartości funkcji amplitudy. Dziedzin ta bezpośrednio analizuje sygnał w jej pierwotnej postaci, gdzie $\textbf{x} = \{x_1, x_2, \ldots, x_n\}$. W tej przestrzeni, zdecydowano się na wybranie następujących cech:
+\newpage
 \begin{itemize}
 	\item \textbf{Skośność} - miara asymetrii sygnału:
 	      \begin{equation}
-		      \frac{1}{N} \sum_{i=1}^{N} \left( \frac{x_i - \bar{x}}{\sigma} \right)^3
+		      \frac{1}{N} \sum_{i=1}^{N} \left( \frac{x_i - \bar{x}}{\sigma} \right)^3,
 	      \end{equation}
-	      gdzie:
+	      \noindent gdzie:
 	      \begin{itemize}
-		      \item \( \bar{x} \) - średnia arytmetyczna.
-		      \item \( \sigma \) - odchylenie standardowe sygnału.
+		      \item \( \bar{x} \) - średnia arytmetyczna,
+		      \item \( \sigma \) - odchylenie standardowe sygnału,
+		      \item $N$ - liczba próbek w wektorze.
 	      \end{itemize}
 	\item \textbf{Współczynnik zmienności} -  względna miara zróżnicowania sygnału:
 	      \begin{equation}
-		      \text{CV} = \frac{\sigma}{\bar{x}}
+		      \text{CV} = \frac{\sigma}{\bar{x}}.
 	      \end{equation}
 	\item \textbf{Średnie odchylenie bezwzględne} - bezwzgledna miara zróżnicowania sygnału:
 	      \begin{equation}
-		      \text{MAD} = \frac{1}{n} \sum_{i=1}^{n} \left| x_i - \bar{x} \right|
+		      \text{MAD} = \frac{1}{n} \sum_{i=1}^{n} \left| x_i - \bar{x} \right|.
 	      \end{equation}
 
 	\item \textbf{Entropia Shannona} - miara niepewności sygnału:
 	      \begin{equation}
-		      H = -\sum_{i=1}^{N} p_i \mathrm{log}_{2} p_i
+		      H = -\sum_{i=1}^{N} p_i \mathrm{log}_{2} p_i,
 	      \end{equation}
-	      gdzie:
+	      \noindent gdzie:
 	      \begin{itemize}
-		      \item \( p_i \) - prawdopodobieństwo wystąpienia \( i \)-tej wartości sygnału.
+		      \item \( p_i \) - prawdopodobieństwo wystąpienia \( i \)-tej wartości sygnału, wyliczane przy pomocy histogramu.
 	      \end{itemize}
 
 
@@ -1186,185 +1319,168 @@ Pierwszą z wybranych domen, interpretuje sygnał jako funkcję ciągłą w czas
 \end{itemize}
 
 
-\subsection{Cechy różnicowe}
-Kolejną z wybranych domen jest domena cech różnicowych, w której sygnał nie jest bezpośrednio intereptowany jako kolejne wartości amplitudy, tylko poprzez różnice zmian między kolejnymi próbkami $\Delta x = \{x_2 - x_1,\, x_3 - x_2,\, \ldots,\, x_n - x_{n-1}\}$. Cechy wyekstrachowane z tej domeny:
+\subsection*{Cechy różnicowe}
+Kolejną z wybranych dziedzin jest dziedzina cech różnicowych, w której sygnał nie jest bezpośrednio interpretowany jako kolejne wartości amplitudy, tylko poprzez różnice zmian między kolejnymi próbkami $\boldsymbol{\Delta x} = \{x_2 - x_1,\, x_3 - x_2,\, \ldots,\, x_n - x_{n-1}\}$. Wektor $\boldsymbol{\Delta x}$ jest także wektorem pochodnych sygnału, pokazującym szybkość zmian sygnału.  Cechy wyodrębnione z tej domeny:
+
 \begin{itemize}
 	\setcounter{enumi}{4}
-	\item \textbf{Procent dodatnich różnic} - odsetek dodatkich róznic kolejnych wartości sygnału
+	\item \textbf{Średnia wartość bezwzględna różnic:}
+	      \begin{equation}
+		      \frac{1}{N-1} \sum_{i=1}^{N-1} |\boldsymbol{\Delta x}|.
+	      \end{equation}
+	\item \textbf{Procent dodatnich różnic} - odsetek dodatkich róznic kolejnych wartości sygnału:
 
 	      \begin{equation}
-		      \frac{100}{N-1} \sum_{i=1}^{N-1} \delta(\Delta x > 0)
+		      \frac{100}{N-1} \sum_{i=1}^{N-1} \delta(\boldsymbol{\Delta x} > 0),
 	      \end{equation}
-	      gdzie:
+	      \noindent gdzie:
 	      \begin{itemize}
 		      \item \( \delta(\cdot) \) - funkcja wskaźnikowa, równa 1 gdy warunek jest spełniony, 0 w przeciwnym wypadku.
 	      \end{itemize}
-	\item \textbf{Średnia wartość bezwzględna różnic:}
-	      \begin{equation}
-		      \frac{1}{N-1} \sum_{i=1}^{N-1} |\Delta x|
-	      \end{equation}
 
-	\item \textbf{Pierwiastek średniokwadratowy różnic} - miara zmienności rytmu serca, która odzwierciedla aktywność układu przywspółczulnego:\cite{Farokhipour2023}
+	\item \textbf{Pierwiastek średniokwadratowy różnic} - miara zmienności rytmu serca, która odzwierciedla aktywność układu przywspółczulnego:~\cite{Farokhipour2023}
 	      \begin{equation}
-		      \text{RMSSD} = \sqrt{ \frac{1}{N-1} \sum_{i=1}^{N-1} (\Delta x)^2 }
+		      \text{RMSSD} = \sqrt{ \frac{1}{N-1} \sum_{i=1}^{N-1} (\boldsymbol{\Delta x})^2 }.
 	      \end{equation}
 
 	\item \textbf{Znormalizowane średnie odchylenie bezwzględne różnic} - ocenia lokalną dynamikę zmian sygnału:
 	      \begin{equation}
-		      \frac{1}{N-1} \sum_{i=1}^{N-1} \frac{|\Delta x|}{\bar{x}}
+		      \frac{1}{N-1} \sum_{i=1}^{N-1} \frac{|\boldsymbol{\Delta x}|}{\bar{x}}.
 	      \end{equation}
 
 	\item \textbf{Znormalizowana suma bezwzględnych różnic:}
 
 	      \begin{equation}
-		      \frac{\sum_{i=1}^{N-1} |\Delta x|}{\sum_{i=1}^{N} |x_i|}
+		      \frac{\sum_{i=1}^{N-1} |\boldsymbol{\Delta x}|}{\sum_{i=1}^{N} |x_i|}.
 	      \end{equation}
 
 \end{itemize}
 
 
-\subsection{Cechy częstotliwościowe}
-Ostatnią wybraną domeną jest domena częstotliwościowa. W tej domenie, sygnał jest przekszłcany przy użyciu transoframty Fouriera, aby uzyskać jego rozkład mocny w zależności częstotliwości $P_{xx}(f)$, gdzie $f$ oznacza częstotliwość. Analiza cech częstotliwościowych, pozwala identyfikować składowe dominujące jak i nieregularności. W tej domenie zdecydowano się na ekstrakcję następujących cech:
+\subsection*{Cechy częstotliwościowe}
+Ostatnią analizowaną dziedziną jest dziedzina częstotliwościowa. W tej dziedzinie sygnał poddawany jest przekształceniu Fouriera, co umożliwia uzyskanie jego rozkładu mocy w funkcji częstotliwości $P_{xx}(f)$, gdzie $f$ oznacza częstotliwość. Rozkład ten został wyznaczony w postaci periodogramu, będącego estymatorem widma gęstości mocy sygnału.  Analiza cech częstotliwościowych, pozwala identyfikować składowe dominujące jak i nieregularności. W tej domenie zdecydowano się na ekstrakcję następujących cech:
 \begin{itemize}
 	\setcounter{enumi}{9}
-	\item \textbf{Maksymalny szczyt widmowy} - określa częstotliwość która posiada największą ilość energii
-	      \begin{equation}
-		      f_{\max} = f \bigl( \arg\max_{f} P_{xx}(f) \bigr)
-	      \end{equation}
 
 
 	\item \textbf{Kurtoza widma} - spłaszczenie widma sygnału:
 	      \begin{equation}
-		      \text{kurt}(P_{xx}) = \frac{1}{M} \sum_{i=1}^M \left( \frac{P_{xx}(f_i) - \overline{P_{xx}}}{\sigma_{P_{xx}}} \right)^4
+		      \text{kurt}(P_{xx}) = \frac{1}{M} \sum_{i=1}^M \left( \frac{P_{xx}(f_i) - \overline{P_{xx}}}{\sigma_{P_{xx}}} \right)^4,
 	      \end{equation}
+	      \noindent gdzie:
+	      \begin{itemize}
+		      \item \( \overline{P_{xx}} \) - Średnia wartość mocny w punktach widma,
+		      \item M - liczba punktów w widmie.
+	      \end{itemize}
 
 	\item \textbf{Energia spektralna} - suma mocy sygnału w całym paśmie częstotliwości:
 	      \begin{equation}
-		      E = \sum_{i=1}^{M} P_{xx}(f_i)
+		      E = \sum_{i=1}^{M} P_{xx}(f_i).
 	      \end{equation}
 
-	\item \textbf{Udział wysokich szczytów widma}
+	\item \textbf{Udział wysokich szczytów widma:}
 	      \begin{equation}
-		      \frac{\sum_{i=1}^{M} \delta(P_{xx}(f_i) > \overline{P_{xx}} )}{M}
+		      \frac{\sum_{i=1}^{M} \delta(P_{xx}(f_i) > \overline{P_{xx}} )}{M}.
+	      \end{equation}
+	\item \textbf{Maksymalny szczyt widmowy} - określa częstotliwość która posiada największą ilość energii:
+	      \begin{equation}
+		      f_{\max} = f \bigl( \arg\max_{f} P_{xx}(f) \bigr).
 	      \end{equation}
 \end{itemize}
 
-\subsection{Implementacja}
+\subsection*{Implementacja}
 Wstępne przetwarzanie zbiorów danych zostało zrealizowane z wykorzystaniem środowiska MATLAB w wersji R2024b. Wybór ten podyktowany był faktem, iż większość analizowanych zbiorów danych dostarczana była w postaci plików z rozszerzeniem .mat, będących binarnym formatem przechowywania danych specyficznym dla środowiska MATLAB.\\
 
-Proces wstępnego przekształcania wymagał indywidualnego dostosowania skryptów dla każdego zbioru danych, co wynikało z różnic w sposobie reprezentacji danych. W części przypadków dane zapisane były jako pojedyncze sygnały, natomiast w innych przyjmowały postać struktur zawierających dodatkowe informacje kontekstowe, takie jak metadane dotyczące sygnału oraz dane pacjenta.
+Proces wstępnego przekształcania wymagał indywidualnego dostosowania skryptów dla każdego zbioru danych, co wynikało z różnic w sposobie reprezentacji danych. W części przypadków dane zapisane były jako pojedyncze sygnały, natomiast w innych przyjmowały postać struktur zawierających dodatkowe informacje kontekstowe, takie jak metadane dotyczące sygnału oraz dane pacjenta.\\
 
-Proces zmiany częstotliwości próbkowania sygnału został zrealizowany przy użyciu funkcji \texttt{resample()}. Funkcja ta najpierw przeprowadza interpolację sygnału, zwiększając jego częstotliwość próbkowania, następnie sygnał jest filtrowany za pomocą dolnoprzepustowego filtra FIR, a ostatecznie następuje redukcja częstotliwości próbkowania do wartości docelowej \cite{mathworks_resample_2025}.\\
+Proces zmiany częstotliwości próbkowania sygnału został zrealizowany przy użyciu funkcji \texttt{resample()}. Funkcja ta najpierw przeprowadza interpolację sygnału, zwiększając jego częstotliwość próbkowania, następnie sygnał jest filtrowany za pomocą dolnoprzepustowego filtra o skończonej odpowiedzi impulsowej (ang. \english{Finite Impulse Response} - FIR), a ostatecznie następuje redukcja częstotliwości próbkowania do wartości docelowej~\cite{mathworks_resample_2025}.\\
 
 
-Proces wyodrębniania wektora cech został również przeprowadzony w środowisku MATLAB. Do obliczenia podstawowych miar statystycznych wykorzystano funkcje dostępne w standardowym pakiecie języka. W przypadku bardziej złożonych cech zastosowano narzędzia udostępniane w ramach rozszerzeń Statistics and Machine Learning Toolbox oraz Signal Processing Toolbox.
+Proces wyodrębniania wektora cech został również przeprowadzony w środowisku MATLAB. Do obliczenia podstawowych miar statystycznych wykorzystano funkcje dostępne w standardowym pakiecie języka. W przypadku bardziej złożonych cech zastosowano narzędzia udostępniane w ramach rozszerzeń Statistics and Machine Learning Toolbox oraz Signal Processing Toolbox. Całość opracowanych w ramach pracy funkcji i skryptów oraz używane zbiory danych są dołączone do niniejszej pracy w wersji elektronicznej.
 
 
 \chapter{Detekcja arytmii serca}
+
+W celu stworzenia oraz przeprowadzenia procesu uczenia modeli opracowano dedykowane skrypty. Ich zadaniem było etapowe konstruowanie modeli predykcyjnych wraz z konfiguracją odpowiednich hiperparametrów. Następnie modele trenowano na przygotowanym zbiorze danych treningowych, a w ostatnim etapie poddawano je testowaniu na niezależnym zbiorze testowym, obliczając wybrane metryki oceny jakości.\\
+
 Całość skryptów dotyczących detekcji arytmii serca z wykorzystaniem metod uczenia maszynowego została zaimplementowana w języku Python w wersji 3.11. W celu ułatwienia procesu budowy, trenowania oraz ewaluacji klasyfikatorów tradycyjnych wykorzystano bibliotekę scikit-learn, która oferuje szeroki zestaw gotowych algorytmów klasyfikacyjnych, funkcji oceny jakości modeli oraz narzędzi do przetwarzania i transformacji danych. W przypadku implementacji modeli opartych na sztucznych sieciach neuronowych zastosowano bibliotekę TensorFlow.\\
 
 Cały proces nauki i testowania modeli został przeprowadzony na komputerze osobistym o następującej specyfikacji sprzętowej: procesor Intel Core i5-13400F, 32 GB pamięci RAM oraz karta graficzna NVIDIA GeForce RTX 4070.
 \section{Architektura i konfiguracja modeli}
-W pierwszym etapie nauki zdecydowano się na jedynie nieznaczną modyfikację domyślnych parametrów klasycznych klasyfikatorów. Dla algorytmu K najbliższych sąsiadów zastosowano metrykę Minkowskiego z parametrem q=2, co odpowiada wykorzystaniu klasycznej metryki euklidesowej. Liczbę sąsiadów ustalono na k=50. W przypadku drzewa decyzyjnego ograniczono maksymalną głębokość drzewa do 30 testów logicznych, co miało na celu redukcję ryzyka przeuczenia modelu. Dla klasyfikatora typu las losowy wykorzystano 100 drzew decyzyjnych, z których każde ograniczono do maksymalnie 10 testów logicznych.
+W pierwszym etapie nauki zdecydowano się na jedynie nieznaczną modyfikację domyślnych parametrów klasycznych klasyfikatorów. Dla algorytmu K najbliższych sąsiadów zastosowano metrykę Minkowskiego z parametrem $q$=2, co odpowiada wykorzystaniu klasycznej metryki euklidesowej. Liczbę sąsiadów ustalono na $k$=50. W przypadku drzewa decyzyjnego ograniczono maksymalną głębokość drzewa do 30 testów logicznych, co miało na celu redukcję ryzyka przeuczenia modelu. Dla klasyfikatora typu las losowy wykorzystano 100 drzew decyzyjnych, z których każde ograniczono do maksymalnie 10 testów logicznych.
 
-Naiwny klasyfikator Bayesa, ze względu na swoje czysto statystyczne działanie, nie posiada klasycznych hiperparametrów wpływających na proces uczenia. Jedynym parametrem regulacyjnym jest wartość wariancji dodawanej do wszystkich cech w celu stabilizacji obliczeń numerycznych, którą ustawiono na $10^{-8}$.
-Dopierajac hiperparametry dla metody wektorów nośnych, wybrano jądro rbf które w celu obliczenia odległości punktów od hierpłaszczyzny wykorzystuje klasyczną odległość euklidesowsą.
+Naiwny klasyfikator Bayesa, ze względu na swoje czysto statystyczne działanie, nie posiada klasycznych hiperparametrów wpływających na proces uczenia. Jedynym parametrem regulacyjnym jest wartość dodawana do wariancji cech w celu stabilizacji obliczeń numerycznych, którą ustawiono na $10^{-8}$.
 
-W kontekście trzech modeli boostingowych, zdecydowano się nie zmieniać żadnych parametrów podstawowych.\\
 
-W przypadku nauki przy użyciu cech, została użyta tylko jedna architektóra sieci neuronowej, oparta na warstwach gęstych. Pierwszą warstwą była warstwa wejściowa posiadają 26 neuronów, odpowiadającym cechom wejściowych. Następnie 4 warstwy ukryte, każda z nich posiadała funkcje aktywacji ReLU. Warstwy posiadały 1024, 512, 256, 128 ilość neuronów. Ostatnia warstwa posiadała tylko jeden neuron, a funkcją aktywacji był sigmoid.
+Dobierając hiperparametry dla metody wektorów nośnych oraz trzech modeli boostingowych, zdecydowano się nie zmieniać żadnych parametrów podstawowych~\cite{Harrison2023, CatBoostDocs2025, LightGBMdocs2025}. Dla SVM oznaczało to wybranie jądra \textit{rbf}, z współczynnikiem \textit{gamma} obliczanym jako odwrotność iloczynu liczby cech oraz ich wariacji. Wykorzystanie modeli SVM wymagało odpowiedniego przeskalowania wektora cech. Najlepsze wyniki procesu uczenia uzyskiwano w przypadku, gdy wektor cech był standaryzowany przy użyciu skalera opartego na wartości średniej oraz odchyleniu standardowym. W związku z tym, dla metod SVM i LS-SVM zastosowano skalowanie, które powoduje, że cechy mają średnią równą 0 oraz odchylenie standardowe równe 1. Ponadto, metody te wymagają, aby wektor cech był przedstawiony w postaci wartości -1 oraz 1, gdzie -1 odpowiada osobie zdrowej, a 1 osobie chorej.\\
+
+W przypadku treningu przy użyciu cech, została użyta tylko jedna architektura sieci neuronowej, oparta na wielowarstwowych w pełni połączonych warstwach gęstych. W pracy wykorzystano architekturę cztero-warstwową. Pierwszą warstwą była warstwa wejściowa posiadająca 26 neuronów, odpowiadających cechom wejściowym. Następnie cztery warstwy ukryte, z których każda posiadała funkcję aktywacji ReLU. Warstwy posiadały odpowiednio po 1024, 512, 256, 128 neuronów. Ostatnia warstwa posiadała tylko jeden neuron, a funkcją aktywacji była sigmoidalna.
 \begin{figure}[!htbp]
 	\centering
-	\caption{Wykresy wybranych funckji aktywacji}
 	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{img/r5/relu.png}
-		\caption{ReLU}
+		\caption{Funkcja ReLU}
 		\label{fig:wykres2}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{img/r5/sigmoid.png}
-		\caption{Sigmoid}
+		\caption{Funkcja Sigmoidalna}
 		\label{Sigmoid}
 	\end{subfigure}
+	\caption{Wykresy wybranych funkcji aktywacji}
 \end{figure}
 
-W prezentowanej architekturze zastosowano funkcję aktywacji ReLU w warstwach ukrytych, ze względu na jej wysoką efektywność obliczeniową oraz zdolność do wspomagania procesu uczenia głębokich sieci neuronowych. ReLU także minimalizuje problem zanikania gradientu.
+W wybranej architekturze zastosowano funkcję aktywacji ReLU w warstwach ukrytych, ze względu na jej wysoką efektywność obliczeniową oraz zdolność do wspomagania procesu uczenia głębokich sieci neuronowych. ReLU także minimalizuje problem zanikania gradientu.
 
-W warstwie wyjściowej wykorzystano funkcję aktywacji sigmoidalną, której właściwości umożliwiają interpretację wyjścia modelu jako prawdopodobieństwa przynależności próbki do klasy pozytywnej. W związku z tym zastosowano jeden neuron w warstwie wyjściowej, którego wartość aktywacji reprezentuje stopień pewności modelu co do przypisania obserwacji do klasy pozytywnej.\\
+W warstwie wyjściowej wykorzystano funkcję aktywacji sigmoidalną, której właściwości umożliwiają interpretację wyjścia modelu jako prawdopodobieństwa przynależności próbki do klasy pozytywnej. W związku z tym zastosowano jeden neuron w warstwie wyjściowej, którego wartość aktywacji reprezentuje stopień pewności modelu co do przypisania obserwacji do klasy pozytywnej. Alternatywą jest zastosowanie dwóch neuronów w warstwie wyjściowej w połączeniu z funkcją softmax, której wyniki interpretowane są jako prawdopodobieństwa sumujące się do jedności. W takiej konfiguracji każdy neuron odpowiada jednej klasie: pierwszy reprezentuje pacjentów zdrowych, a drugi pacjentów z arytmią.\\
 
-Do optymalizacji wag modelu wykorzystano algorytm ADAM, który łączy zalety metod opartych na momentum oraz RMSProp. Optymalizator ten adaptacyjnie dostosowuje szybkość uczenia dla każdej z wag, uwzględniając zarówno średnie wartości gradientów z poprzednich epok, jak i ich skale\cite{kingma2014adam,ruder2016overview}.\\
+
+Do optymalizacji wag modelu zastosowano algorytm ADAM (ang. \english{Adaptive Moment Estimation}), który łączy zalety metod opartych na momentum oraz RMSProp. Optymalizator ten adaptacyjnie dostosowuje tempo uczenia dla każdej wagi, uwzględniając zarówno średnie wartości gradientów z poprzednich iteracji, jak i ich wariancję~\cite{kingma2014adam}. Dzięki temu ADAM w porównaniu z innymi algorytmami optymalizacji charakteryzuje się większą odpornością na szum w danych oraz krótszym czasem potrzebnym na trening modelu. Należy jednak zaznaczyć, że jego istotną wadą jest większa skłonność do unikania globalnego minimum w porównaniu z algorytmami takimi jak SGD (ang. \english{Stochastic Gradient Descent})~\cite{ruder2016overview}.\\
 
 Ze względu na rodzaj problemu, wybraną funkcją strat została binarna entropia krzyżowa. Funkcję tą można opisać przy pomocy wzoru:
 \begin{equation}
-	\mathcal{L}_{\text{avg}} = - \frac{1}{N} \sum_{i=1}^{N} \left( y_i \cdot \mathrm{log}(\hat{y}_i) + (1 - y_i) \cdot \mathrm{log}(1 - \hat{y}_i) \right)
+	\mathcal{L}_{\text{avg}} = - \frac{1}{N} \sum_{i=1}^{N} \left( y_i \cdot \mathrm{log}(\hat{y}_i) + (1 - y_i) \cdot \mathrm{log}(1 - \hat{y}_i) \right),
 \end{equation}
 
-gdzie:
+\noindent gdzie:
 \begin{itemize}
 	\item $N$  liczba próbek w zbiorze,
 	\item $y_i$  prawdziwa etykieta $i$-tej próbki,
 	\item $\hat{y}_i$  prawdopodobieństwo przypisane klasie pozytywnej dla $i$-tej próbki.
 \end{itemize}
-W eksperymencie przyjęto, że proces uczenia modelu będzie przebiegać przez 10 epok z rozmiarem partii równym 64. Zastosowano również dynamiczną regulacje kroku uczenia, w której początkowa wartość kroku uczenia wynosiła 0.001
-
-Od piątej epoki zastosowano wykładniczy schemat zmniejszania kroku uczenia, zgodny z równaniem:	{
+W przeprowadzonym eksperymencie proces uczenia modelu realizowano w ciągu 10 iteracji. Zastosowano dynamiczną regulację kroku uczenia, którego początkowa wartość wynosiła 0.001. Mechanizm ten miał na celu dokładniejsze dostrajanie modelu w końcowych etapach treningu. Począwszy od piątej iteracji wprowadzono wykładniczy schemat zmniejszania kroku uczenia, opisany równaniem:
 \begin{equation}
-	Lr(epoka) =
+	\alpha(j) =
 	\begin{cases}
-		Lr_0                          & \text{jeżeli } epoka < 5    \\
-		Lr(epoka - 1) \times e^{-0.1} & \text{jeżeli } epoka \geq 5
+		\alpha_0                      & \text{jeżeli } j < 5    \\
+		\alpha(j - 1) \times e^{-0.1} & \text{jeżeli } j \geq 5
 	\end{cases}
+	\!\vcenter{\hbox{,}}
 \end{equation}
-}
-gdzie:
+\noindent gdzie:
 \begin{itemize}
-	\item $Lr$ - krok uczenia
-	\item $Lr_0$ - początkowy krok uczenia
+	\item $ \alpha$ - krok uczenia,
+	\item $ \alpha_0$ - początkowy krok uczenia,
+	\item $j$ - aktulna iteracja.
 \end{itemize}
 
 W przypadku uczenia bezcechowego, zdecydowano się na przetestowanie czterech różnych architektur sieci neuronowych, zróżnicowanych pod względem rodzaju zastosowanych warstw.
 
 Pierwsza architektura odpowiadała strukturze wykorzystanej w eksperymencie z uczeniem cechowym, co umożliwia bezpośrednie porównanie efektywności obu metod względem tego samego problemu klasyfikacyjnego.
 
-Druga architektura wykorzystywała warstwy konwolucyjne jednowymiarowe , przeplatane warstwami MaxPooling1D, których zadaniem było redukowanie wymiarowości sygnału poprzez wybór wartości maksymalnej w lokalnym sąsiedztwie. Po zakończeniu ekstrakcji cech konwolucyjnych, zastosowano warstwę Flatten, która przekształca dane o strukturze wielowymiarowej do postaci wektora jednowymiarowego. Operacja ta jest niezbędna, aby możliwe było podłączenie kolejnych warstw gęstych, które przetwarzają wektor cech wygenerowany przez wcześniejsze warstwy konwolucyjne.
+Druga architektura wykorzystywała warstwy splotowe jednowymiarowe, przeplatane warstwami o nazwie \textit{MaxPooling1D}, których zadaniem było redukowanie wymiarowości sygnału poprzez wybór wartości maksymalnej w lokalnym sąsiedztwie. Po zakończeniu ekstrakcji cech konwolucyjnych, zastosowano warstwę spłaszczającą, która przekształca dane o strukturze wielowymiarowej do postaci wektora jednowymiarowego. Operacja ta jest niezbędna, aby możliwe było podłączenie kolejnych warstw gęstych, które przetwarzają wektor cech wygenerowany przez wcześniejsze warstwy konwolucyjne.
 
 Trzecia rozważana architektura opiera się na dwóch sekwencyjnie połączonych warstwach typu LSTM, które są zdolne do modelowania zależności czasowych w sygnale. Warstwy te zostały uzupełnione o końcowe warstwy gęste, umożliwiające dokonanie klasyfikacji na podstawie reprezentacji uzyskanej z przetworzenia sekwencji czasowej.
 
-Czwarta architektura stanowi połączenie podejść zastosowanych we wszystkich trzech wcześniejszych modelach. W pierwszym etapie wykorzystywane są warstwy konwolucyjne jednowymiarowe wraz z warstwami MaxPooling1D, których zadaniem jest lokalna ekstrakcja cech oraz redukcja wymiarowości danych. Wynikowy tensor jest następnie przekazywany do warstw LSTM, które modelują zależności czasowe. Ostatecznie, przetworzony wektor cech trafia do warstw gęstych, które realizują końcową klasyfikację.\\
-
+Czwarta architektura stanowi połączenie podejść zastosowanych we wszystkich trzech wcześniejszych modelach. W pierwszym etapie wykorzystywane są warstwy konwolucyjne jednowymiarowe wraz z warstwami łączącymi, których zadaniem jest lokalna ekstrakcja cech oraz redukcja wymiarowości danych. Wynikowy tensor (wielowarstwowa tablica) jest następnie przekazywany do warstw LSTM, które modelują zależności czasowe. Ostatecznie, przetworzony wektor cech trafia do warstw gęstych, które realizują końcową klasyfikację.
 We wszystkich opisanych architekturach przyjęto identyczny zestaw hiperparametrów procesu uczenia, jak w przypadku modelu uczącego się na danych cechowych. Dzięki temu możliwe było porównanie skuteczności różnych architektur przy zachowaniu spójnych warunków eksperymentalnych.\\
 
-Zdecydowano się także, na przeprowadzenie procesu optymalizacji hiperparametrów modeli. Proces ten polegał na iteracyjnym zmianie hiperparametrów i testowaniu modeli. Całość procesu została wykonania przy pomocy bibloteki Optuna. Wykorzystuje ona strategie sekwencyjnej optymalizacji bayesowskiej. Metoda ta jest znacznie szybka niż wykorzystanie siatki parametrów lub losowego sprawdzania parametrów. Metoda ta, buduje modele probabilistyczne które uczą się procesu wybierania kolejnych zestawów hiperparametrów, balansując eksploracje nowych obszarów jak i ulepszanie znanych.\\
+Zdecydowano się także, na przeprowadzenie procesu optymalizacji hiperparametrów modeli. Proces ten polegał na iteracyjnym zmianie hiperparametrów i testowaniu modeli. Całość procesu została wykonana przy pomocy biblioteki Optuna. Wykorzystuje ona strategię sekwencyjnej optymalizacji bayesowskiej. Metoda ta jest znacznie szybsza niż wykorzystanie siatki parametrów lub losowego sprawdzania parametrów. Metoda ta, buduje modele probabilistyczne które uczą się procesu wybierania kolejnych zestawów hiperparametrów, balansując eksplorację nowych obszarów jak i ulepszanie znanych~\cite{optuna_2019}.
 
-
-% \centering
-% \caption{Testowane zakresy hiperparametrów}
-% \label{tab:hiperparametry}
-
-Nazwy hiperparametrów zamieszczone w tabeli \ref{tab:hiperparametry} zostały zaczerpnięte z dokumentacji technicznej wykorzystanej biblioteki \cite{sklearn_api}.\\
-
-W przypadku algorytmu K najbliższych sąsiadów zdecydowano się na optymalizację dwóch kluczowych hiperparametrów. Pierwszym z nich była liczba sąsiadów k, wykorzystywana do predykcji klasy nowych próbek. W ramach procedury wyszukiwania optymalnych wartości badano wartości K z przedziału od 5 do 200. Drugim z optymalizowanych parametrów był parametr p w funkcji odległości Minkowskiego, który wpływa na sposób obliczania dystansu pomiędzy próbkami. W tym przypadku analizowano wartości całkowite z zakresu od 1 do 5.
-
-Drzewo decyzyjne dysponuje większą liczbą hiperparametrów, które mogą podlegać procesowi optymalizacji. Parametr criterion odpowiada za sposób oceny jakości podziału danych w węzłach drzewa. Domyślną wartością tego parametru jest "gini", który opiera się na analizie proporcji klas. Alternatywnie, rozważono również wartość "entropy", która wykorzystuje entropię do określenia niepewności rozkładu klas w danym węźle.
-
-Parametr max features definiuje maksymalną liczbę cech rozważanych podczas wyboru cechy, według której następuje podział. Natomiast parametry min samples split oraz min samples leaf kontrolują odpowiednio minimalną liczbę próbek wymaganą do dokonania podziału oraz minimalną liczbę próbek w liściu. Wartości tych trzech parametrów przeszukiwano w zbiorze liczb całkowitych od 1 do 20.
-
-Ostatnim optymalizowanym parametrem było max depth, które określa maksymalną głębokość drzewa decyzyjnego, a tym samym maksymalną liczbę testów logicznych prowadzących od korzenia do liścia. Zakres wartości tego parametru obejmował liczby całkowite z przedziału od 3 do 20.\\
-
-
-Las losowy dziedziczy wszystkie parametry drzewa decyzyjnego ze względu na swoje działanie oparte o równoległą naukę tych modeli. Dlatego parametry criterion, max features, min samples split, min samples leaf oraz max depth są optymalizowane w takich samych przedziałach jak w przypadku drzewa decyzyjnego.
-
-Unikatowym hiperparametrem, który podlegał optymalizacji, jest n estimators, określający liczbę drzew decyzyjnych wchodzących w skład lasu losowego. Wartości tego parametru przeszukiwano w zbiorze liczb całkowitych z zakresu od 1 do 200.\\
-
-Najważniejszym parametrem dla klasyfikatora SVM jest jądro, przy pomocy którego dokonywane są wewnętrzne przekształcenia przestrzeni cech. Zdecydowano się sprawdzić wszystkie cztery możliwości: linear, który oblicza iloczyn skalarny dwóch wektorów; poly, który rozszerza dane do przestrzeni wielomianowej; rbf, który wykorzystuje eksponentę kwadratu odległości euklidesowej; oraz sigmoid, który używa funkcji tangensa hiperbolicznego. Porównanie działania poszczególnych jąder przedstawia Rysunek~\ref{jadro_svm}.
-
-Jądra wykorzystywane w metodzie SVM korzystają z dwóch wspólnych parametrów. Pierwszy z nich, gamma, określa wpływ pojedynczego punktu treningowego na przebieg granicy decyzyjnej. W niniejszym eksperymencie gamma może przyjmować dwie wartości: scale, która uwzględnia wariancję oraz liczbę cech, oraz auto, która opiera się wyłącznie na liczbie cech. Drugim parametrem jest C, który kontroluje siłę regularyzacji L2 podczas treningu. Parametr ten może przyjmować wartości zmiennoprzecinkowe z przedziału od $10^{-5}$ do $10^{5}$.
-
-Ze względu na zróżnicowane działanie poszczególnych jąder, istnieją również parametry charakterystyczne dla niektórych z nich. Parametr degree określa rząd wielomianu, do którego rozwijane jest jądro poly, jego wartość będzie sprawdzana z liczb całkowitych od 2 do 5. Z kolei parametr coeff0 stanowi wartość przesunięcia dla jąder typu poly oraz sigmoid. Sprawdzanymi wartościami tego parametru będą liczby zmiennoprzecinkowe od -1 do 1. Jądra linear oraz rbf nie posiadają dodatkowych, charakterystycznych parametrów poza gamma oraz C.
-\begin{table}[]
+\begin{table}[!h]
 	\centering
 	\caption{Testowane zakresy hiperparametrów}
 	\label{tab:hiperparametry}
@@ -1372,66 +1488,225 @@ Ze względu na zróżnicowane działanie poszczególnych jąder, istnieją równ
 		\toprule
 		\textbf{Hiperparametr} & \textbf{Typ}      & \textbf{Wartości}          \\ \midrule
 		\multicolumn{3}{c}{\textbf{KNN}}                                        \\ \midrule
-		K                      & Liczba całkowita  & (5, 200)                   \\
-		p                      & Liczba całkowita  & (1, 5)                     \\ \midrule
+		K                      & Liczba całkowita  & (30, 300)                  \\
+		p                      & Liczba całkowita  & (1, 10)                    \\ \midrule
 		\multicolumn{3}{c}{\textbf{DRZEWO DECYZYJNE}}                           \\ \midrule
 		Criterion              & Kategoryczny      & gini, entropy              \\
 		Max features           & Kategoryczny      & sqrt, log2, None           \\
 		Min samples split      & Liczba całkowita  & (1, 20)                    \\
 		Min samples leaf       & Liczba całkowita  & (1, 20)                    \\
-		Max depth              & Liczba całkowita  & (3, 20)                    \\ \midrule
+		Max depth              & Liczba całkowita  & (3, 30)                    \\ \midrule
 		\multicolumn{3}{c}{\textbf{LAS LOSOWY}}                                 \\ \midrule
 		Criterion              & Kategoryczny      & gini, entropy              \\
 		Max features           & Kategoryczny      & sqrt, log2, None           \\
 		Min samples split      & Liczba całkowita  & (1, 20)                    \\
 		Min samples leaf       & Liczba całkowita  & (1, 20)                    \\
-		Max depth              & Liczba całkowita  & (3, 20)                    \\
+		Max depth              & Liczba całkowita  & (3, 30)                    \\
 		n estimators           & Liczba całkowita  & (1, 200)                   \\ \midrule
 		\multicolumn{3}{c}{\textbf{SVM}}                                        \\ \midrule
 		Kernel                 & Kategoryczny      & linear, poly, rbf, sigmoid \\
 		Gamma                  & Kategoryczny      & scale, auto                \\
-		Degree                 & Liczba całkowita  & (2, 5)                     \\
+		Degree                 & Liczba całkowita  & (2, 4)                     \\
 		Coef0                  & Liczba dziesiętna & (-1. 1)                    \\
-		C                      & Liczba dziesiętna & ($10^{-5}$,  $10^{5}$)     \\ \bottomrule
+		C                      & Liczba dziesiętna & ($10^{-4}$,  $10^{4}$)     \\ \bottomrule
 	\end{tabular}
 \end{table}
-
 \newpage
+
+Nazwy hiperparametrów zamieszczone w tabeli~\ref{tab:hiperparametry} zostały zaczerpnięte z dokumentacji technicznej wykorzystanej biblioteki~\cite{sklearn_api}. Opis wpływu parametrów jak i działanie klasyfikator znajduję się w rozdziale~\ref{subsec:metody}.\\
+
+W przypadku algorytmu K najbliższych sąsiadów zdecydowano się na optymalizację dwóch kluczowych hiperparametrów. Pierwszym z nich była liczba sąsiadów $k$, wykorzystywana do predykcji klasy nowych próbek. W ramach procedury wyszukiwania optymalnych wartości badano wartości $k$ z przedziału od 30 do 300. Drugim z optymalizowanych parametrów był parametr $p$ w funkcji odległości Minkowskiego, który wpływa na sposób obliczania dystansu pomiędzy próbkami. W tym przypadku analizowano wartości całkowite z zakresu od 1 do 10.\\
+
+Drzewo decyzyjne dysponuje większą liczbą hiperparametrów, które mogą podlegać procesowi optymalizacji. Parametr \textit{criterion} który odpowiada za sposób oceny jakości podziału danych w węzłach drzewa. Domyślną wartością tego parametru jest ''gini'', który opiera się na analizie proporcji klas. Alternatywnie, rozważono również wartość ''entropy'', która wykorzystuje entropię do oceny jakości podziału w danym węźle decyzyjnym.
+W przypadku parametru \textit{max features} zdecydowano się sprawdzić trzy warianty: ograniczenie liczby cech do wartości logarytmu przy podstawie 2 z całkowitej liczby cech, ograniczenie do pierwiastka kwadratowego z liczby cech oraz brak ograniczenia. Natomiast parametry \textit{min samples split} oraz \textit{min samples leaf} były przeszukiwane w zbiorze liczb całkowitych od 1 do 20.
+Ostatnim optymalizowanym parametrem było \textit{max depth} którego zakres wartości tego parametru obejmował liczby całkowite z przedziału od 3 do 30.\\
+
+Las losowy dziedziczy wszystkie parametry drzewa decyzyjnego ze względu na swoje działanie oparte o równoległą naukę tych modeli. Dlatego parametry \textit{criterion},  \textit{max features},  \textit{min samples split}, \textit{min samples leaf} oraz \textit{max depth} są optymalizowane w takich samych przedziałach jak w przypadku drzewa decyzyjnego.
+Unikatowym hiperparametrem, który podlegał optymalizacji, jest n estimators, wartości tego parametru przeszukiwano w zbiorze liczb całkowitych z zakresu od 1 do 200.\\
+
+Najważniejszym parametrem dla klasyfikatora SVM jest jądro, przy pomocy którego dokonywane są wewnętrzne przekształcenia przestrzeni cech. Zdecydowano się sprawdzić wszystkie cztery możliwości: jądro liniowe, jądro wielomianowe, jądro radialnej funkcji bazowej, jądro sigmoidalne. Porównanie działania poszczególnych jąder przedstawia Rysunek~\ref{jadro_svm}.
+Jądra wykorzystywane w metodzie SVM korzystają z dwóch wspólnych parametrów. Pierwszy z nich \textit{gamma}, który może przyjmować dwie wartości: scale, która uwzględnia wariancję oraz liczbę cech, oraz auto, która opiera się wyłącznie na liczbie cech. Drugim parametrem jest $C$ który może przyjmować wartości zmiennoprzecinkowe z przedziału od $10^{-4}$ do $10^{4}$.
+Ze względu na zróżnicowane działanie poszczególnych jąder, istnieją również parametry charakterystyczne dla niektórych z nich. Parametr \textit{degree}  określa rząd wielomianu, do którego rozwijane jest jądro poly, jego wartość będzie sprawdzana z liczb całkowitych od 2 do 5. Z kolei parametr \textit{coeff0} stanowi wartość przesunięcia dla jąder typu poly oraz sigmoid. Sprawdzanymi wartościami tego parametru będą liczby zmiennoprzecinkowe od -1 do 1.
+
+
 \section{Walidacja wyników}
-W celu oceny jakości predykcji modeli zastosowano dwie niezależne metody walidacji krzyżowej. TODO DOPISAĆ COŚ TUTAJ\\
+W celu oceny jakości predykcji modeli zastosowano dwie niezależne metody walidacji krzyżowej. Zdecydowano się na takie podejście ze względu na brak informacji o miejscu zbierania sygnału PPG oraz rodzaju użytego źródła światła. Walidacja metodą holdout pozwoliła zasymulować sytuację, w której klasyfikator nie posiada żadnej wiedzy na temat sprzętu i metodyki wykorzystanego w badaniu. Natomiast walidacja K-fold zakłada dostęp do próbek pochodzących z tego samego typu aparatury i metod pomiarowych, przy jednoczesnym zapewnieniu, że dane poszczególnych pacjentów są rozdzielone pomiędzy zbiory uczące i testowe.\\
 
 
 
-\subsection{Walidacja holdout}
-Pierwszą z użytych metod jest walidacja krzyżowa metodą holdout polega na jednorazowym podziale dostępnych danych na dwa rozłączne podzbiory: zbiór treningowy oraz zbiór testowy. Zbiór treningowy wykorzystywany jest do uczenia modelu, natomiast zbiór testowy służy do oceny jego zdolności generalizacji na nieznanych wcześniej danych. Najczęściej stosowaną proporcją podziału jest 80:20, gdzie 80\% danych trafia do zbioru treningowego, a pozostałe 20\% do testowego. Należy jednak podkreślić, że nie jest to wartość sztywno ustalona - wybór proporcji zależy od liczby dostępnych próbek oraz charakterystyki problemu.
+\subsection*{Walidacja holdout}
+Pierwszą z użytych metod jest walidacja krzyżowa metodą holdout, która polega na jednorazowym podziale dostępnych danych na dwa rozłączne podzbiory: zbiór treningowy oraz zbiór testowy. Zbiór treningowy wykorzystywany jest do uczenia modelu, natomiast zbiór testowy służy do oceny jego zdolności generalizacji na nieznanych wcześniej danych. Najczęściej stosowaną proporcją podziału jest 80:20, gdzie 80\% danych trafia do zbioru treningowego, a pozostałe 20\% do testowego. Należy jednak podkreślić, że nie jest to wartość sztywno ustalona - wybór proporcji zależy od liczby dostępnych próbek oraz charakterystyki problemu.
 
-W niektórych przypadkach, szczególnie przy zastosowaniu złożonych modeli wymagających doboru hiperparametrów, ze zbioru treningowego dodatkowo wydziela się zbiór walidacyjny. Wówczas zbiór treningowy dzielony jest na dwa podzbiory: zbiór uczący oraz zbiór walidacyjny. Zbiór walidacyjny służy do oceny jakości modelu podczas procesu dobór optymalnych hiperparametrów bez ryzyka przecieku informacji ze zbioru testowego. Jego wykorzystanie pozwala na kontrolowanie lepsze procesu uczenia, np. poprzez mechanizm wczesnego zatrzymania, który przerywa naukę modelu w momencie, gdy jakość predykcji na zbiorze walidacyjnym przestają się poprawiać, co ogranicza ryzyko przeuczenia.\\
+W niektórych przypadkach, szczególnie przy zastosowaniu złożonych modeli wymagających doboru hiperparametrów, ze zbioru treningowego dodatkowo wydziela się zbiór walidacyjny. Wówczas zbiór treningowy dzielony jest na dwa podzbiory: zbiór uczący oraz zbiór walidacyjny. Zbiór walidacyjny służy do oceny jakości modelu podczas procesu doboru optymalnych hiperparametrów bez ryzyka przecieku informacji ze zbioru testowego. Jego wykorzystanie pozwala na kontrolowanie lepsze procesu uczenia, np. poprzez mechanizm wczesnego zatrzymania, który przerywa naukę modelu w momencie, gdy jakość predykcji na zbiorze walidacyjnym przestaje się poprawiać, co ogranicza ryzyko przeuczenia.\\
 
-{\LARGE
-RYSUNEK}\\
+Aby uniknąć przecieku informacji, polegającego na tym, że model ma dostęp do danych testowych już na etapie treningu, z decydowano się użyć zbiorów PhysionNet, zbioru według Liu, Zengding i Zhou et al~\cite{liu2022multiclass} oraz danych syntetycznych jako zbioru treningowego oraz zbioru MIMIC jako zbiór testujący. Przeciek taki prowadzi do sztucznego zawyżenia wartości metryk jakościowych, co z kolei fałszuje rzeczywistą skuteczność modelu w warunkach niezależnych od zbioru treningowego. W kontekście wdrożeniowym, gdzie modele są stosowane do danych nieobecnych podczas treningu, taki przeciek znacząco obniża przewidywaną skuteczność modeli. Z tego względu procedura walidacji została przeprowadzona w sposób rygorystyczny, z zachowaniem separacji danych treningowych i testowych.
+\subsubsection*{Nauka cechowa}
+\begin{table}[!h]
+	\centering
+	\caption{Wartości miar jakościowych dla nauki cechowej dla walidacji Holdout}
+	\label{houldout_cechowa}
+	\resizebox{\textwidth}{!}{
+		\begin{tabular}{@{}>{\centering\arraybackslash}m{3.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}@{}}
+			\toprule
+			                    & \textbf{Acc}  & \textbf{Spec} & \textbf{$F_1$} & \textbf{nMCC} & \textbf{FC}   \\
+			\midrule
+			\textbf{KNN}        & 0.69          & 0.59          & 0.73           & 0.69          & 0.68          \\
+			\textbf{\makecell{Drzewo                                                                             \\Decyzyjne}} & 0.56 & 0.40 & 0.63 & 0.55 & 0.55 \\
+			\textbf{\makecell{Las                                                                                \\Losowy}} & 0.53 & 0.06 & 0.68 & 0.48 & 0.45 \\
+			\textbf{Bayes}      & \textbf{0.71} & 0.44          & \textbf{0.78}  & \textbf{0.72} & 0.67          \\
+			\textbf{SVM}        & 0.69          & 0.48          & 0.75           & 0.69          & 0.66          \\
+			\textbf{LS-SVM}     & 0.67          & 0.51          & 0.73           & 0.67          & 0.65          \\
+			\textbf{XGBoost}    & 0.64          & 0.56          & 0.69           & 0.64          & 0.64          \\
+			\textbf{CatBoost}   & 0.69          & 0.64          & 0.72           & 0.69          & \textbf{0.69} \\
+			\textbf{LightBoost} & 0.66          & 0.61          & 0.69           & 0.65          & 0.66          \\
+			\textbf{\makecell{Sieć                                                                               \\Neuronowa}} &0.66  & \textbf{0.69} & 0.61 & 0.65  &0.66  \\
+			\bottomrule
+		\end{tabular}
+	}
+\end{table}
+Analizując tabelę~\ref{houldout_cechowa}, można zauważyć, że modele boostingowe najlepiej poradziły sobie z zadaniem klasyfikacji sygnałów PPG zawierających segmenty arytmii. W przypadku modelu CatBoost, który uzyskał najlepsze wyniki, osiągnięto wartość funkcji celu równą 0.69, a także nMCC i dokładność na tym samym poziomie. Ponadto odnotowano wartość swoistości równą 0.64 oraz F-miary równą 0.72. Pomimo że CatBoost uzyskał najwyższe wyniki w funkcji celu oraz swoistości, można wskazać modele, które osiągnęły lepsze rezultaty w innych wskaźnikach jakościowych.
 
-Aby uniknać przecieku informacji, polegającego na tym, że model ma dostęp do danych testowych już na etapie treningu, z decydowano się użyć zbiorów X Y Z jako zbioru treningowego oraz zbioru ABC jako zbiór testujący. Przeciek taki prowadzi do sztucznego zawyżenia wartości metryk jakościowych, co z kolei fałszuje rzeczywistą skuteczność modelu w warunkach niezależnych od zbioru treningowego. W kontekście wdrożeniowym, gdzie modele są stosowane do danych nieobecnych podczas treningu, taki przeciek znacząco obniża przewidywaną skuteczność modeli. Z tego względu procedura walidacji została przeprowadzona w sposób rygorystyczny, z zachowaniem pełnej separacji danych treningowych i testowych.
+Drugim najlepszym modelem był KNN, z wartością funkcji celu równą 0.68. Osiągnął on takie same wartości nMCC i dokładności jak CatBoost, wynoszące 0.69. KNN charakteryzował się również najwyższą spośród wszystkich modeli wartością F-miary równą 0.73.
 
+Drzewo decyzyjne osiągnęło przeciętne wyniki, z wartością swoistości na poziomie 0.40 oraz F-miary równą 0.63. Mając na uwadze, że nMCC wyniosło 0.48, a funkcja celu 0.45, można stwierdzić, że predykcje tego modelu były jedynie nieznacznie lepsze od losowych.
 
-\subsubsection*{Nauca cechowa}
+Las losowy uzyskał najniższą wartość swoistości spośród wszystkich modeli, równą 0.06, co oznacza, że niemal każdy segment czasowy był klasyfikowany jako segment z arytmią. W efekcie predykcje tego modelu były jedynie minimalnie lepsze od losowych. Model ten wymaga optymalizacji hiperparametrów w celu poprawy jakości klasyfikacji.
+Naiwny klasyfikator Bayesa osiągnął najwyższą wartość dokładności spośród wszystkich modeli (0.71), a także najwyższe wartości F-miary (0.78) oraz nMCC (0.72). Jednak z powodu niskiej swoistości, wynoszącej zaledwie 0.44, nie uzyskał on najwyższej wartości funkcji celu, choć wynik 0.67 nadal należy uznać za bardzo dobry.
+
+Oba modele SVM -- klasyczny i LS-SVM -- osiągnęły bardzo zbliżone rezultaty. Model LS-SVM lepiej rozpoznawał klasę zdrowych, natomiast klasyczny SVM lepiej identyfikował klasę chorych. W efekcie klasyczny SVM charakteryzował się wyższymi wartościami dokładności, F-miary, nMCC oraz funkcji celu, podczas gdy zmodyfikowana wersja uzyskała wyższą swoistość.
+
+Sieć neuronowa posiadała średnią wartość funkcji celu wynoszącą 0.66, jednak charakteryzuje się ona najwyższą wartość swoistości ze wszystkich modeli równą 0.69. Posiadała ona też wartość dokładności plasującą się między LS-SVM a najgorszym modelem boostingowym, jego wartość wynosiła 0.66.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/r5/houldout/cech_dense.png}
+	\caption{Średnia krzywa ROC}
+	\label{roc_c}
+\end{figure}
+
+Krzywa ROC modelu sieci neuronowej charakteryzuje się wartością AUC równą 0.70 i zróżnicowanym przebiegiem. W prawej części wykresu ma ona kształt zbliżony do wzorcowego, delikatnie zbliżając się do prawego górnego rogu. Natomiast w miarę przesuwania się w lewą stronę obserwuje się wyraźne odchylenie w kierunku przekątnej, szczególnie widoczne w pobliżu lewego dolnego rogu wykresu.
 \subsubsection*{Nauca bezcechowa}
-\subsubsection*{Optymalizacjia hiperparametrów}
+\begin{table}[!h]
+	\centering
+	\caption{Wartości miar jakościowych dla nauki bezcechowej dla walidacji Kfold}
+	\label{holdout_bezcechowa}
+	\resizebox{\textwidth}{!}{
+		\begin{tabular}{@{}>{\centering\arraybackslash}m{3.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}@{}}
+			\toprule
+			                  & \textbf{Acc}  & \textbf{Spec} & \textbf{$F_1$} & \textbf{nMCC} & \textbf{FC}   \\
+			\midrule
+			\textbf{Gęsta}    & 0.54          & 0.47          & 0.58           & 0.53          & 0.54          \\
+			\textbf{CNN}      & \textbf{0.59} & \textbf{0.56} & 0.62           & \textbf{0.59} & \textbf{0.59} \\
+			\textbf{LSTM}     & 0.55          & 0.02          & \textbf{0.70}  & 0.52          & 0.46          \\
+			\textbf{CNN-LSTM} & 0.57          & 0.34          & 0.65           & 0.55          & 0.54          \\
+			\bottomrule
+		\end{tabular}
+	}
+\end{table}
+Analizując tabelę~\ref{houldout_cechowa}, można zauważyć, że najwyższą wartość funkcji celu osiągnęła sieć z warstwami konwolucyjnymi - w jej przypadku wyniosła ona 0.59. Model ten uzyskał również najwyższe wartości nMCC, swoistości oraz dokładności. Na przeciwnym biegunie znajduje się sieć z warstwami LSTM, która odnotowała najniższe wartości funkcji celu i nMCC, a jej swoistość była bliska zeru, co oznacza, że predykcje były praktycznie losowe.\\
+
+Sieć gęsta oraz model łączący CNN i LSTM uzyskały taką samą wartość funkcji celu równą 0.54. Sieć gęsta charakteryzowała się jednak wyższą swoistością (0.47) w porównaniu do CNN-LSTM (0.34). Z kolei CNN-LSTM uzyskał wyższą wartość F-miary równa 0.65 w porównaniu do sieci gęstej, której F-miara = 0.58.\\
+
+Wartości AUC krzywych ROC zaprezentowanych na rysunku~\ref{roc_c} potwierdzają wcześniej wyciągnięte wnioski. Najwyższą wartość AUC osiąga sieć CNN (\ref{cnn_hold}) - wynosi ona 0.60. Charakteryzuje się ona również najlepszą krzywizną, mocniej wygiętą w lewą stronę. Jednak po lewej stronie wykresu można zauważyć zbliżenie do przekątnej. Najniższą wartość AUC uzyskała sieć LSTM - 0.49. Jej krzywa ROC jest najbardziej zbliżona do przekątnej. Sieć gęsta osiągnęła wartość AUC równą 0.54, minimalnie odchodząc od przekątnej i przecinając ją w pierwszej ćwiartce wykresu. Dla sieci CNN-LSTM wartość AUC wynosi 0.57, a krzywa ROC odchodzi od przekątnej, nie przecinając jej.
+\begin{figure}[!ht]
+	\centering
+	\label{roc_bezcech_hold}
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{img/r5/houldout/bez_cech_dense.png}
+		\caption{Krzywa ROC sieci gęstej}
+		\label{fig:dense_hold}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{img/r5/houldout/bez_cech_cnn.png}
+		\caption{Krzywa ROC sieci CNN}
+		\label{cnn_hold}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{img/r5/houldout/bez_cech_stm.png}
+		\caption{Krzywa ROC sieci LSTM }
+		\label{lstm_hold}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{img/r5/houldout/bez_cech_cnn_lstm.png}
+		\caption{Krzywa ROC sieci CNN-LSTM}
+		\label{cnn-lstm_hold}
+	\end{subfigure}
+	\caption{Średnie krzywe ROC dla nauki bezcechowej}
+\end{figure}
+
+
+
 \newpage
-\subsection{Walidacja K-Fold}
+\subsubsection*{Optymalizacjia hiperparametrów}
+W przypadku optymalizacji parametrów zdecydowano się na przeprowadzenie 100 iteracji poszukiwania takich wartości, które zapewniają najwyższą wartość funkcji celu na zbiorze walidacyjnym, wydzielonym ze zbioru treningowego. Podczas procesu optymalizacji modele nie miały dostępu do zbioru testowego.
+
+Dla modelu KNN najlepsze parametry zostały znalezione w 97. iteracji, przy liczbie sąsiadów równej 42 oraz $p$ = 7 w metryce Minkowskiego. Dzięki zastosowaniu tych parametrów uzyskano wynik 0.722 na zbiorze walidacyjnym.
+
+W przypadku drzewa decyzyjnego najlepsze parametry zostały określone w 52. iteracji, osiągając wartość funkcji celu równą 0.705. Zestaw parametrów obejmował: \textit{criterion} = ''gini'', \textit{max depth} = 12, \textit{min samples split} = 9, \textit{min samples leaf} = 2, \textit{max features} = log2.
+
+Podczas optymalizacji lasu losowego w 57. iteracji odnaleziono najlepsze parametry, dające wartość funkcji celu równą 0.714. Wynik ten uzyskano dla następujących parametrów: $n$ estimators = 81, \textit{criterion} = ''entropy'', \textit{max depth} = 21, \textit{min samples split} = 15, \textit{min samples leaf} = 4, \textit{max features} = log2.
+
+Dla modelu SVM parametrami osiągającymi najwyższą wartość funkcji celu okazały się: $C$ = 63.14, \textit{kernel} = sigmoid, \textit{gamma} = auto, \textit{coef0} = -0.56. Zostały one wyłonione w próbie nr 37, uzyskując wartość funkcji celu równą 0.78.
+\begin{table}[!h]
+	\centering
+	\caption{Wartości miar jakościowych po optymlizacji}
+	\label{k-fold_cechowa_opty}
+	\resizebox{\textwidth}{!}{
+		\begin{tabular}{@{}>{\centering\arraybackslash}m{3.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}@{}}
+			\toprule
+			                        & \textbf{Acc}  & \textbf{Spec} & \textbf{$F_1$} & \textbf{nMCC} & \textbf{FC}   \\
+			\midrule			\textbf{KNN} & 0.74          & 0.62          & 0.78           & 0.74          & 0.72          \\
+			\textbf{\makecell{Drzewo                                                                                 \\Decyzyjne}} & 0.70     & \textbf{0.74} & 0.71  & 0.71 & 0.72 \\
+			\textbf{\makecell{Las                                                                                    \\Losowy}} & 0.70      & \textbf{0.74} & 0.70  & 0.70 & 0.71 \\
+			\textbf{SVM}            & \textbf{0.80} & 0.72          & \textbf{0.82}  & \textbf{0.80} & \textbf{0.79} \\
+			\bottomrule
+		\end{tabular}
+	}
+
+\end{table}
+
+Modelem, który dzięki optymalizacji hiperparametrów osiągnął najwyższą wartość funkcji celu, okazał się SVM z wynikiem 0.79. Uzyskał on również najwyższe wartości dokładności, nMCC i F-miary spośród wszystkich badanych modeli. Jedynie drzewo decyzyjne oraz las losowy odnotowały wyższe wartości swoistości.
+
+Drzewo decyzyjne zajęło drugie miejsce pod względem wartości funkcji celu (0.72). W porównaniu z SVM uzyskało niższe wartości większości wskaźników jakościowych, a jedynym parametrem, w którym było lepsze, była swoistość (0.72).
+
+Model KNN również osiągnął wartość funkcji celu równą 0.72, identyczną jak drzewo decyzyjne, lecz przewyższał je pod względem dokładności (0.74), nMCC (0.74) oraz F-miary. Jednocześnie charakteryzował się najniższą swoistością spośród wszystkich modeli, wynoszącą zaledwie 0.62.
+
+Las losowy uzyskał wyniki zbliżone do drzewa decyzyjnego, osiągając jednak najniższą wartość funkcji celu (0.71), a także najniższe wartości F-miary, nMCC oraz dokładności, osiągając przy tym najwyższe wartości swoistości równe temu drzewa decyzyjnego.
+\newpage
+\subsection*{Walidacja K-Fold}
 Drugą zastosowaną metodą oceny jakości modelu jest walidacja krzyżowa K-krotna. Procedura ta polega na K-krotnym podziale dostępnego zbioru danych na K zbliżonych rozmiarowo części, zwanych foldami. W każdej iteracji jeden z foldów pełni rolę zbioru testującego, natomiast pozostałe K-1 foldy służą do trenowania modelu. Proces ten jest powtarzany K razy, za każdym razem z innym foldem jako zestawem testowym. Dzięki temu każda obserwacja jest wykorzystana dokładnie raz do walidacji oraz K-1 razy do uczenia modelu. Zdecydowano się na wykonanie walidacji przy pomocy 5 foldów.\\
 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=1\textwidth]{img/r5/kfold.jpg}
-	\caption{Wizualizacja walidacji Kfold\cite{allibhai2018holdout}}
+	\caption{Wizualizacja walidacji Kfold~\cite{allibhai2018holdout}}
 	\label{fig:etykieta-rysunku}
 \end{figure}
 
 W przypadku zastosowania walidacji K-krotnej, w celu uniknięcia przecieku danych, zdecydowano się na ręczny przydział pacjentów do poszczególnych foldów. Dzięki temu próbki pochodzące od tego samego pacjenta nie występowały jednocześnie w zbiorze treningowym i walidacyjnym w żadnej z iteracji, co mogłoby prowadzić do sztucznego zawyżenia ocenianych metryk. Dodatkowo, w celu zapewnienia wiarygodności wyników, dane syntetyczne zostały wykluczone z procesu testowania, lecz były uwzględniane w trakcie uczenia modelu w każdej iteracji.\\
 
-Ze względu na charakter metody walidacji krzyżowej K-Fold, w ramach jednego procesu walidacyjnego model jest  trenowany i testowany K razy. Skutkuje to otrzymaniem K niezależnych wyników dla każdej z metryk oceny modelu. W celu ich przejrzystej prezentacji zdecydowano się na przedstawienie rezultatów w postaci wartości średniej $\pm$ odchylenie standardowe. Taki sposób raportowania umożliwia nie tylko ocenę przeciętnej skuteczności modelu, ale również pozwala na analizę rozrzutu wyników między poszczególnymi foldami, dając pełniejszy obraz jakości modelu.
-% Please add the following required packages to your document preamble:
-% \usepackage{booktabs}
+Ze względu na charakter metody walidacji krzyżowej K-Fold, w ramach jednego procesu walidacyjnego model jest trenowany i testowany K razy. Skutkuje to otrzymaniem K niezależnych wyników dla każdej z metryk oceny modelu. W celu ich przejrzystej prezentacji zdecydowano się na przedstawienie rezultatów w postaci wartości średniej $\pm$ odchylenie standardowe. Taki sposób raportowania umożliwia nie tylko ocenę przeciętnej skuteczności modelu, ale również pozwala na analizę rozrzutu wyników między poszczególnymi foldami, dając pełniejszy obraz jakości modelu.
+
 
 
 \newpage
@@ -1439,7 +1714,7 @@ Ze względu na charakter metody walidacji krzyżowej K-Fold, w ramach jednego pr
 \begin{table}[!h]
 	\centering
 	\caption{Wartości miar jakościowych dla nauki cechowej dla walidacji Kfold}
-	\label{kfold_cechowa}
+	\label{k-fold_cechowa}
 	\resizebox{\textwidth}{!}{
 		\begin{tabular}{@{}>{\centering\arraybackslash}m{3.5cm}
 			>{\centering\arraybackslash}m{2.5cm}
@@ -1448,35 +1723,35 @@ Ze względu na charakter metody walidacji krzyżowej K-Fold, w ramach jednego pr
 			>{\centering\arraybackslash}m{2.5cm}
 			>{\centering\arraybackslash}m{2.5cm}@{}}
 			\toprule
-			                    & \textbf{Dokładność} & \textbf{Spec}   & \textbf{F-miara} & \textbf{nMCC}   & \textbf{FC}     \\
+			                    & \textbf{Acc}             & \textbf{Spec}            & \textbf{$F_1$}           & \textbf{nMCC}            & \textbf{FC}              \\
 			\midrule
-			\textbf{KNN}        & 0.83 $\pm$ 0.01     & 0.74 $\pm$ 0.03 & 0.87 $\pm$ 0.01  & 0.82 $\pm$ 0.01 & 0.82 $\pm$ 0.01 \\
-			\textbf{\makecell{Drzewo                                                                                           \\Decyzyjne}} & 0.83 $\pm$ 0.01 & 0.77 $\pm$ 0.02 & 0.86 $\pm$ 0.00 & 0.83 $\pm$ 0.01 & 0.83 $\pm$ 0.01 \\
-			\textbf{\makecell{Las                                                                                              \\Losowy}} & 0.84 $\pm$ 0.01 & 0.72 $\pm$ 0.03 & 0.87 $\pm$ 0.01 & 0.83 $\pm$ 0.01 & 0.82 $\pm$ 0.01 \\
-			\textbf{Bayes}      & 0.50 $\pm$ 0.04     & 0.33 $\pm$ 0.28 & 0.57 $\pm$ 0.17  & 0.47 $\pm$ 0.02 & 0.48 $\pm$ 0.01 \\
-			\textbf{SVM}        & 0.79 $\pm$ 0.01     & 0.61 $\pm$ 0.03 & 0.84 $\pm$ 0.01  & 0.78 $\pm$ 0.01 & 0.76 $\pm$ 0.01 \\
-			\textbf{LLSVM}      & 0.78 $\pm$ 0.01     & 0.61 $\pm$ 0.02 & 0.83 $\pm$ 0.01  & 0.76 $\pm$ 0.01 & 0.75 $\pm$ 0.01 \\
-			\textbf{XGBoost}    & 0.86 $\pm$ 0.01     & 0.81 $\pm$ 0.02 & 0.89 $\pm$ 0.01  & 0.86 $\pm$ 0.01 & 0.86 $\pm$ 0.01 \\
-			\textbf{CatBoost}   & 0.86 $\pm$ 0.01     & 0.81 $\pm$ 0.02 & 0.89 $\pm$ 0.01  & 0.86 $\pm$ 0.01 & 0.86 $\pm$ 0.01 \\
-			\textbf{LightBoost} & 0.85 $\pm$ 0.01     & 0.78 $\pm$ 0.03 & 0.88 $\pm$ 0.01  & 0.84 $\pm$ 0.01 & 0.84 $\pm$ 0.01 \\
-			\textbf{\makecell{Sieć                                                                                             \\Neuronowa}} &0.82 ± 0.01 & 0.73 ± 0.05 & 0.85 ± 0.01& 0.81 ± 0.01 &0.81 ± 0.02 \\
+			\textbf{KNN}        & 0.83 $\pm$ 0.01          & 0.74 $\pm$ 0.03          & 0.87 $\pm$ 0.01          & 0.82 $\pm$ 0.01          & 0.82 $\pm$ 0.01          \\
+			\textbf{\makecell{Drzewo                                                                                                                                   \\Decyzyjne}} & 0.83 $\pm$ 0.01 & 0.77 $\pm$ 0.02 & 0.86 $\pm$ 0.00 & 0.83 $\pm$ 0.01 & 0.83 $\pm$ 0.01 \\
+			\textbf{\makecell{Las                                                                                                                                      \\Losowy}} & 0.84 $\pm$ 0.01 & 0.72 $\pm$ 0.03 & 0.87 $\pm$ 0.01 & 0.83 $\pm$ 0.01 & 0.82 $\pm$ 0.01 \\
+			\textbf{Bayes}      & 0.50 $\pm$ 0.04          & 0.33 $\pm$ 0.28          & 0.57 $\pm$ 0.17          & 0.47 $\pm$ 0.02          & 0.48 $\pm$ 0.01          \\
+			\textbf{SVM}        & 0.79 $\pm$ 0.01          & 0.61 $\pm$ 0.03          & 0.84 $\pm$ 0.01          & 0.78 $\pm$ 0.01          & 0.76 $\pm$ 0.01          \\
+			\textbf{LS-SVM}     & 0.78 $\pm$ 0.01          & 0.61 $\pm$ 0.02          & 0.83 $\pm$ 0.01          & 0.76 $\pm$ 0.01          & 0.75 $\pm$ 0.01          \\
+			\textbf{XGBoost}    & \textbf{0.86} $\pm$ 0.01 & \textbf{0.81 $\pm$ 0.02} & \textbf{0.89 $\pm$ 0.01} & \textbf{0.86 $\pm$ 0.01} & \textbf{0.86 $\pm$ 0.01} \\
+			\textbf{CatBoost}   & \textbf{0.86} $\pm$ 0.01 & \textbf{0.81 $\pm$ 0.02} & \textbf{0.89 $\pm$ 0.01} & \textbf{0.86 $\pm$ 0.01} & \textbf{0.86 $\pm$ 0.01} \\
+			\textbf{LightBoost} & 0.85 $\pm$ 0.01          & 0.78 $\pm$ 0.03          & 0.88 $\pm$ 0.01          & 0.84 $\pm$ 0.01          & 0.84 $\pm$ 0.01          \\
+			\textbf{\makecell{Sieć                                                                                                                                     \\Neuronowa}} &0.82 $\pm$ 0.01 & 0.73 $\pm$ 0.05 & 0.85 $\pm$ 0.01& 0.81 $\pm$ 0.01 &0.81 $\pm$ 0.02 \\
 			\bottomrule
 		\end{tabular}
 	}
 \end{table}
-Analizując dane przedstawione w tabeli \ref{kfold_cechowa}, można zaobserwować, że modele boostingowe najlepiej poradziły sobie z zadaniem wykrywania arytmii. Osiągnęły one najwyższe wartości we wszystkich miarach jakościowych. Modele XGBoost i CatBoost uzyskały identyczne wyniki, co wynika z faktu, że wykorzystują one zbliżone techniki modelowania zależności pomiędzy cechami a klasą. Charakteryzują się one wysokim poziomem równowagi pomiędzy precyzją a czułością, co potwierdza wysoka wartość F-miary. Jednocześnie nie tracą zdolności do wykrywania klasy zdrowych pacjentów, co potwierdza średnia swoistość na poziomie 81\%
+Analizując dane przedstawione w tabeli~\ref{k-fold_cechowa}, można zaobserwować, że modele boostingowe najlepiej poradziły sobie z zadaniem wykrywania arytmii. Osiągnęły one najwyższe wartości we wszystkich miarach jakościowych. Modele XGBoost i CatBoost uzyskały identyczne wyniki, co wynika z faktu, że wykorzystują one zbliżone techniki modelowania zależności pomiędzy cechami a klasą. Charakteryzują się one wysokim poziomem równowagi pomiędzy precyzją a czułością, co potwierdza wysoką wartość F-miary. Jednocześnie nie tracą zdolności do wykrywania klasy zdrowych pacjentów, co potwierdza średnia swoistość na poziomie 81\%.
 
-Drugim najlepszym modelem pod względem wartości funkcji celu okazało się drzewo decyzyjne, którego wynik był zaledwie o 0,03 punktu procentowego niższy niż dla najlepszego modelu w przypadku funkcji celu, nMCC, F-miary oraz dokładności.
+Drugim najlepszym modelem pod względem wartości funkcji celu okazało się drzewo decyzyjne, którego wynik był zaledwie o 0.03 punktu procentowego niższy niż dla najlepszego modelu w przypadku funkcji celu, nMCC, F-miary oraz dokładności.
 
-Las losowy, pomimo agregowania wielu drzew decyzyjnych, osiągnął nieco niższe wartości wskaźników jakościowych, z wyjątkiem F-miary, która była wyższa o 0,01 punktu procentowego. Może to sugerować, że model ten wymaga dokładniejszego strojenia hiperparametrów.
+Las losowy, pomimo agregowania wielu drzew decyzyjnych, osiągnął nieco niższe wartości wskaźników jakościowych, z wyjątkiem F-miary, która była wyższa o 0.01 punktu procentowego. Może to sugerować, że model ten wymaga dokładniejszego strojenia hiperparametrów.
 
 W przypadku klasyfikatora KNN wartości miar jakościowych były porównywalne do wyników uzyskanych przez las losowy.
 
-Model SVM i LLSVM poradził sobie porównywalnie dobrze, ale SVM posiada każdy wskaźnij jakościowy nie gorszy niż LSSVM. Wciąż będać mniej wydajnym niż wcześnij omawiane modele.
+Model SVM i LS-SVM poradził sobie porównywalnie dobrze, ale SVM posiada każdy wskaźnij jakościowy nie gorszy niż LS-SVM. Wciąż będąc mniej wydajnym niż wcześniej omawiane modele..
 
 Najgorzej z zadaniem wykrywania arytmii poradził sobie naiwny klasyfikator Bayesa. Uzyskał on najniższe wartości miar jakościowych: swoistość na poziomie 0.33 oraz nMCC wynoszące 0.47, co przełożyło się na ujemną wartość współczynnika MCC równą -0.06. Ponadto model ten cechował się największym rozrzutem wyników, podczas gdy odchylenie standardowe innych klasyfikatorów nie przekraczało 0.05, w tym przypadku osiągnęło nawet 0.28.
 
-Sięc neuronowa, osiąngęła wyniki porównywalne z dobrymi klasyfikatorami, które są lepsze niż modele maszyn nośnych, ale gorsze niż las losowy, osiągajac wartość funkcji celu i nMCC na poziomie 0.81.
+Sieć neuronowa, osiągnęła wyniki porównywalne z dobrymi klasyfikatorami, które są lepsze niż modele maszyn nośnych, ale gorsze niż las losowy, osiągając wartość funkcji celu i nMCC na poziomie 0.81.
 
 \begin{figure}[!h]
 	\centering
@@ -1484,15 +1759,14 @@ Sięc neuronowa, osiąngęła wyniki porównywalne z dobrymi klasyfikatorami, kt
 	\caption{Średnia krzywa ROC}
 	\label{fig:etykieta-rysunku}
 \end{figure}
-Średnia krzywa ROC, wyznaczona na podstawie pięciu foldów walidacyjnych, wskazuje na bardzo dobrą zdolność modelu do klasyfikacji, osiągając wartość AUC równą 0,89. Krzywa ta wykazuje wyraźne wygięcie w kierunku lewego górnego narożnika wykresu oraz płaskie podejście do prawego górnego narożnika, co świadczy o wysokiej skuteczności klasyfikatora. Brakuje w niej fragmentów przebiegających blisko przekątnej. Krzywa jest ponadto stabilna i regularna, co dodatkowo potwierdza jej jakość.
-
+Średnia krzywa ROC, wyznaczona na podstawie pięciu foldów walidacyjnych, wskazuje na bardzo dobrą zdolność modelu do klasyfikacji, osiągając wartość AUC równą 0.89. Krzywa ta wykazuje wyraźne wygięcie w kierunku lewego górnego narożnika wykresu oraz płaskie podejście do prawego górnego narożnika, co świadczy o wysokiej skuteczności klasyfikatora. Brakuje w niej fragmentów przebiegających blisko przekątnej. Krzywa jest ponadto stabilna i regularna, co dodatkowo potwierdza jej jakość.
 \newpage
 \subsubsection*{Nauca bezcechowa}
 
 \begin{table}[!h]
 	\centering
 	\caption{Wartości miar jakościowych dla nauki bezcechowej dla walidacji Kfold}
-	\label{kfold_bezcechowa}
+	\label{k-fold_bezcechowa}
 	\resizebox{\textwidth}{!}{
 		\begin{tabular}{@{}>{\centering\arraybackslash}m{3.5cm}
 			>{\centering\arraybackslash}m{2.5cm}
@@ -1501,29 +1775,24 @@ Sięc neuronowa, osiąngęła wyniki porównywalne z dobrymi klasyfikatorami, kt
 			>{\centering\arraybackslash}m{2.5cm}
 			>{\centering\arraybackslash}m{2.5cm}@{}}
 			\toprule
-			                  & \textbf{Dokładność} & \textbf{Spec}   & \textbf{F-miara} & \textbf{nMCC}   & \textbf{FC}     \\
+			                  & \textbf{Acc}             & \textbf{Spec}            & \textbf{$F_1$}           & \textbf{nMCC}            & \textbf{FC}              \\
 			\midrule
-			\textbf{Gęsta}    & 0.79 $\pm$ 0.01     & 0.61 $\pm$ 0.07 & 0.84 $\pm$ 0.01  & 0.77 $\pm$ 0.01 & 0.76 $\pm$ 0.02 \\
-			\textbf{CNN}      & 0.78 $\pm$ 0.01     & 0.61 $\pm$ 0.07 & 0.83 $\pm$ 0.00  & 0.77 $\pm$ 0.01 & 0.75 $\pm$ 0.02 \\
-			\textbf{LSTM}     & 0.63 $\pm$ 0.03     & 0.16 $\pm$ 0.13 & 0.76 $\pm$ 0.01  & 0.56 $\pm$ 0.07 & 0.53 $\pm$ 0.07 \\
-			\textbf{CNN-LSTM} & 0.61 $\pm$ 0.00     & 0.00 $\pm$ 0.00 & 0.75 $\pm$ 0.00  & 0.50 $\pm$ 0.00 & 0.48 $\pm$ 0.00 \\
+			\textbf{Gęsta}    & \textbf{0.79 $\pm$ 0.01} & \textbf{0.61 $\pm$ 0.07} & \textbf{0.84 $\pm$ 0.01} & \textbf{0.77 $\pm$ 0.01} & \textbf{0.76 $\pm$ 0.02} \\
+			\textbf{CNN}      & 0.78 $\pm$ 0.01          & \textbf{0.61 $\pm$ 0.07} & 0.83 $\pm$ 0.00          & \textbf{0.77 $\pm$ 0.01} & 0.75 $\pm$ 0.02          \\
+			\textbf{LSTM}     & 0.63 $\pm$ 0.03          & 0.16 $\pm$ 0.13          & 0.76 $\pm$ 0.01          & 0.56 $\pm$ 0.07          & 0.53 $\pm$ 0.07          \\
+			\textbf{CNN-LSTM} & 0.61 $\pm$ 0.00          & 0.00 $\pm$ 0.00          & 0.75 $\pm$ 0.00          & 0.50 $\pm$ 0.00          & 0.48 $\pm$ 0.00          \\
 			\bottomrule
 		\end{tabular}
 	}
 \end{table}
 
-Analizując tabelę \ref{kfold_bezcechowa}, można zauważyć, że dwa pierwsze modele, sieć gęsta oraz CNN, poradziły sobie porównywalnie dobrze z zadaniem klasyfikacji, osiągając wartość znormalizowanego współczynnika korelacji równą 0,77. Pozostałe miary jakości również prezentują zadowalający poziom. Jedynym wskaźnikiem wyraźnie odbiegającym od reszty jest swoistość, która wyniosła zaledwie 0,61 i charakteryzowała się największym rozrzutem wartości.
+Analizując tabelę~\ref{k-fold_bezcechowa}, można zauważyć, że dwa pierwsze modele, sieć gęsta oraz CNN, poradziły sobie porównywalnie dobrze z zadaniem klasyfikacji, osiągając wartość znormalizowanego współczynnika korelacji równą 0.77. Pozostałe miary jakości również prezentują zadowalający poziom. Jedynym wskaźnikiem wyraźnie odbiegającym od reszty jest swoistość, która wyniosła zaledwie 0.61 i charakteryzowała się największym rozrzutem wartości.\\
 
-Dodanie warstw LSTM doprowadziło do pogorszenia skuteczności klasyfikatorów. W skrajnym przypadku, sieć o architekturze CNN-LSTM klasyfikowała wszystkich pacjentów jako chorych, o czym świadczy zerowa wartość swoistości oraz nMCC wynoszący jedynie 0,50. Model ten uzyskał także najniższą wartość funkcji celu, równą zaledwie 0.48. Sieć LSTM bez warstw konwolucyjnych osiągnęła wyniki nieznacznie lepsze niż CNN-LSTM posiadajac swoistość na poziomie 0.16 oraz nMCC równe 0.56.\\
+Dodanie warstw LSTM doprowadziło do pogorszenia skuteczności klasyfikatorów. W skrajnym przypadku, sieć o architekturze CNN-LSTM klasyfikowała wszystkich pacjentów jako chorych, o czym świadczy zerowa wartość swoistości oraz nMCC wynoszący jedynie 0.50. Model ten uzyskał także najniższą wartość funkcji celu, równą zaledwie 0.48. Sieć LSTM bez warstw konwolucyjnych osiągnęła wyniki nieznacznie lepsze niż CNN-LSTM posiadając swoistość na poziomie 0.16 oraz nMCC równe 0.56.\\
 
-Analiza krzywych ROC przedstawionych na rysunku \ref{roc_bezcech} potwierdza wcześniej sformułowane wnioski. Można zaobserwować istotne różnice pomiędzy krzywymi ROC dla sieci gęstej (\ref{fig:dense}) i sieci konwolucyjnej (\ref{cnn}), a krzywymi dla modeli zawierających warstwy LSTM (\ref{lstm}) oraz CNN-LSTM (\ref{cnn-lstm}). Dwa pierwsze modele charakteryzują się krzywymi silnie wygiętymi w kierunku lewego górnego rogu wykresu oraz znacznym oddaleniem od przekątnej a ich pola pod krzywą wynoszą około 0.85.W przeciwieństwie do tego, krzywe ROC modeli zawierających warstwy LSTM są zbliżone do przekątnej wykresua ich wartości AUC oscylują wokół 0.5, co sugeruje niemal losowe prognozowanie klasy.
-
-
-
+\newpage
 \begin{figure}[!ht]
 	\centering
-	\caption{Średnie krzywe ROC dla nauki bezcechowej}\
-	\label{roc_bezcech}
 	\begin{subfigure}[b]{0.49\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{img/r5/kfold/bezcech_dense_roc_auc_0_85.png}
@@ -1549,15 +1818,28 @@ Analiza krzywych ROC przedstawionych na rysunku \ref{roc_bezcech} potwierdza wcz
 		\caption{Krzywa ROC sieci CNN-LSTM}
 		\label{cnn-lstm}
 	\end{subfigure}
+	\caption{Średnie krzywe ROC dla nauki bezcechowej}
+	\label{roc_bezcech_2}
 \end{figure}
+Analiza krzywych ROC przedstawionych na rysunku~\ref{roc_bezcech_2} potwierdza wcześniej sformułowane wnioski. Można zaobserwować istotne różnice pomiędzy krzywymi ROC dla sieci gęstej (\ref{fig:dense}) i sieci konwolucyjnej (\ref{cnn}), a krzywymi dla modeli zawierających warstwy LSTM (\ref{lstm}) oraz CNN-LSTM (\ref{cnn-lstm}). Dwa pierwsze modele charakteryzują się krzywymi silnie wygiętymi w kierunku lewego górnego rogu wykresu oraz znacznym oddaleniem od przekątnej, a ich pola pod krzywą wynoszą około 0.85. W przeciwieństwie do tego, krzywe ROC modeli zawierających warstwy LSTM są zbliżone do przekątnej wykresu, a ich wartości AUC oscylują wokół 0.5, co sugeruje niemal losowe prognozowanie klasy.
 
-\newpage
+
+
+
+
 \subsubsection*{Optymalizacjia hiperparametrów}
+W przypadku optymalizacji hiperparametrów zdecydowano się na przeprowadzenie 100 iteracji poszukiwań wartości umożliwiających maksymalizację funkcji celu. Każda z testowanych konfiguracji była oceniana na zbiorach walidacyjnych, które zostały wyodrębnione z odpowiednich foldów uczących w danej iteracji. W celu uniknięcia przecieku danych, końcowa ocena skuteczności najlepszych konfiguracji przeprowadzona została na wcześniej niewidzianych danych testowych.
+Podczas procesu optymalizacji modelu KNN najwyższą wartość funkcji celu na zbiorze walidacyjnym osiągnięto w 12. iteracji, uzyskując wynik równy 0.865. Konfiguracja ta wykorzystywała 30 sąsiadów oraz parametr p = 4 w metryce Minkowskiego.
 
+Najlepszy zestaw hiperparametrów dla drzewa decyzyjnego obejmował: \textit{criterion} = entropy, \textit{max features} = sqrt, \textit{min samples split} = 9, \textit{min samples leaf} = 4 oraz \textit{max depth} = 28. Zestaw ten uzyskał wartość funkcji celu równą 0.889 i został wybrany w 83. iteracji.
+
+W przypadku modelu lasu losowego optymalny zestaw parametrów był zbliżony do drzewa decyzyjnego, jednak zawierał pewne modyfikacje. Wartości parametrów \textit{criterion} i \textit{max features} pozostały niezmienione, natomiast \textit{min samples split} zmieniono na 6, \textit{min samples} leaf na 2, a \textit{max depth} na 24. Konfiguracja ta, uzyskana w 71. iteracji, pozwoliła osiągnąć wartość funkcji celu równą 0.913.
+
+Dla modelu SVM najlepszy zestaw parametrów uzyskano w 16. iteracji, osiągając wartość funkcji celu równą 0.878 przy zastosowaniu parametrów: $C$ = 8900.32, \textit{kernel} = rbf, gamma = scale.
 \begin{table}[!h]
 	\centering
-	\caption{Wartości miar jakościowych po optymlizacji}
-	\label{kfold_cechowa_opty}
+	\caption{Wartości miar jakościowych po optymlizacji dla metody k-fold}
+	\label{k-fold_cechowa_opty}
 	\resizebox{\textwidth}{!}{
 		\begin{tabular}{@{}>{\centering\arraybackslash}m{3.5cm}
 			>{\centering\arraybackslash}m{2.5cm}
@@ -1566,257 +1848,108 @@ Analiza krzywych ROC przedstawionych na rysunku \ref{roc_bezcech} potwierdza wcz
 			>{\centering\arraybackslash}m{2.5cm}
 			>{\centering\arraybackslash}m{2.5cm}@{}}
 			\toprule
-			             & \textbf{Dokładność} & \textbf{Spec}   & \textbf{F-miara} & \textbf{nMCC}   & \textbf{FC}     \\
+			             & \textbf{Acc}    & \textbf{Spec}   & \textbf{$F_1$}  & \textbf{nMCC}   & \textbf{FC}     \\
 			\midrule
-			\textbf{KNN} & 0.83 $\pm$ 0.00     & 0.73 $\pm$ 0.00 & 0.87 $\pm$ 0.00  & 0.82 $\pm$ 0.00 & 0.82 $\pm$ 0.00 \\
-			\textbf{\makecell{Drzewo                                                                                    \\Decyzyjne}} & 0.83 $\pm$ 0.01 & 0.77 $\pm$ 0.02 & 0.86 $\pm$ 0.00 & 0.83 $\pm$ 0.01 & 0.83 $\pm$ 0.01 \\
-			\textbf{\makecell{Las                                                                                       \\Losowy}} & 0.84 $\pm$ 0.01 & 0.72 $\pm$ 0.03 & 0.87 $\pm$ 0.01 & 0.83 $\pm$ 0.01 & 0.82 $\pm$ 0.01 \\
-			\textbf{SVM} & 0.79 $\pm$ 0.01     & 0.61 $\pm$ 0.03 & 0.84 $\pm$ 0.01  & 0.78 $\pm$ 0.01 & 0.76 $\pm$ 0.01 \\
+			\textbf{KNN} & 0.83 $\pm$ 0.00 & 0.73 $\pm$ 0.00 & 0.87 $\pm$ 0.00 & 0.82 $\pm$ 0.00 & 0.82 $\pm$ 0.00 \\
+			\textbf{\makecell{Drzewo                                                                               \\Decyzyjne}} & 0.83 $\pm$ 0.01 & 0.77 $\pm$ 0.02 & 0.86 $\pm$ 0.00 & 0.82 $\pm$ 0.01 & 0.83 $\pm$ 0.01 \\
+			\textbf{\makecell{Las                                                                                  \\Losowy}} & \textbf{0.86 $\pm$ 0.00} & \textbf{0.78 $\pm$ 0.00} & \textbf{0.89 $\pm$ 0.00} & \textbf{0.86 $\pm$ 0.00} & \textbf{0.85 $\pm$ 0.00} \\
+			\textbf{SVM} & 0.81 $\pm$ 0.00 & 0.71 $\pm$ 0.00 & 0.85 $\pm$ 0.00 & 0.80 $\pm$ 0.00 & 0.79 $\pm$ 0.00 \\
 			\bottomrule
 		\end{tabular}
 	}
 \end{table}
-\section{Analiza wyników}
+
+Analizując wyniki optymalizacji hiperparametrów, można zaobserwować, że dla trzech z czterech modeli wartość odchylenia standardowego została zmniejszona do wartości pomijalnie małych, mniejszych niż 0.005, dla wszystkich miar jakościowych. Jedynym modelem, który posiadał odchylenie standardowe większe lub równe 0.01, było drzewo decyzyjne.
+
+Las losowy osiągnął najwyższą wartość funkcji celu spośród wszystkich optymalizowanych modeli, równą 0.85. Uzyskał także najwyższe wartości we wszystkich miarach jakościowych.
+
+SVM osiągnął najgorsze wyniki we wszystkich miarach jakościowych, uzyskując wartość funkcji celu równą 0.79.
+
+Drzewo decyzyjne i KNN plasują się pomiędzy Lasem losowym a SVM, osiągając wartości funkcji celu odpowiednio 0.82 i 0.83. W przypadku KNN niższa wartość swoistości wskazuje, że model ten gorzej klasyfikuje próbki osób zdrowych.
+
 
 \chapter{Podsumowanie i wnioski}
-
-
-% W całym dokumencie powinny znajdować się odniesienia do zawartych w nim ilustracji (rys. \ref{fig:2}).
-
-% \begin{figure}
-% 	\centering
-% 	\begin{tikzpicture}
-% 		\begin{axis}[
-% 				y tick label style={
-% 						/pgf/number format/.cd,
-% 						fixed,   % po zakomentowaniu os rzednych jest indeksowana wykladniczo
-% 						fixed zerofill, % 1.0 zamiast 1
-% 						precision=1,
-% 						/tikz/.cd
-% 					},
-% 				x tick label style={
-% 						/pgf/number format/.cd,
-% 						fixed,
-% 						fixed zerofill,
-% 						precision=2,
-% 						/tikz/.cd
-% 					}
-% 			]
-% 			\addplot [domain=0.0:0.1] {rnd};
-% 		\end{axis}
-% 	\end{tikzpicture}
-% 	\caption{Wykres przebiegu funkcji.} % Podpis jest zawsze POD rysunkiem.
-% 	\label{fig:2}
-% \end{figure}
-
-
-%%%%%%%%%%%%%%%%%%%%%
-%% RYSUNEK Z PLIKU
-%
-%\begin{figure}
-%\centering
-%\includegraphics[width=0.5\textwidth]{./politechnika_sl_logo_bw_pion_pl.pdf}
-%\caption{Podpis rysunku zawsze pod rysunkiem.}
-%\label{fig:etykieta-rysunku}
-%\end{figure}
-%Rys. \ref{fig:etykieta-rysunku} przestawia …
-%%%%%%%%%%%%%%%%%%%%%
-%
-%%%%%%%%%%%%%%%%%%%%%
-%% WIELE RYSUNKÓW 
-%
-%\begin{figure}
-%\centering
-%\begin{subfigure}{0.4\textwidth}
-%    \includegraphics[width=\textwidth]{./politechnika_sl_logo_bw_pion_pl.pdf}
-%    \caption{Lewy górny rysunek.}
-%    \label{fig:lewy-gorny}
-%\end{subfigure}
-%\hfill
-%\begin{subfigure}{0.4\textwidth}
-%    \includegraphics[width=\textwidth]{./politechnika_sl_logo_bw_pion_pl.pdf}
-%    \caption{Prawy górny rysunek.}
-%    \label{fig:prawy-gorny}
-%\end{subfigure}
-%
-%\begin{subfigure}{0.4\textwidth}
-%    \includegraphics[width=\textwidth]{./politechnika_sl_logo_bw_pion_pl.pdf}
-%    \caption{Lewy dolny rysunek.}
-%    \label{fig:lewy-dolny}
-%\end{subfigure}
-%\hfill
-%\begin{subfigure}{0.4\textwidth}
-%    \includegraphics[width=\textwidth]{./politechnika_sl_logo_bw_pion_pl.pdf}
-%    \caption{Prawy dolny rysunek.}
-%    \label{fig:prawy-dolny}
-%\end{subfigure}
-%        
-%\caption{Wspólny podpis kilku rysunków.}
-%\label{fig:wiele-rysunkow}
-%\end{figure}
-%Rys. \ref{fig:wiele-rysunkow} przestawia wiele ważnych informacji, np. rys. \ref{fig:prawy-gorny} jest na prawo u góry.
-%%%%%%%%%%%%%%%%%%%%%
-
-
-% Tekst dokumentu powinien również zawierać odniesienia do tabel (tab. \ref{id:tab:wyniki}).
-
-% \begin{table}
-% 	\centering
-% 	\caption{Opis tabeli nad nią.}
-% 	\label{id:tab:wyniki}
-% 	\begin{tabular}{rrrrrrrr}
-% 		\toprule
-% 		        & \multicolumn{7}{c}{metoda}                                                                                                                                  \\
-% 		\cmidrule{2-8}
-% 		        &                            &         & \multicolumn{3}{c}{alg. 3} & \multicolumn{2}{c}{alg. 4, $\gamma = 2$}                                                \\
-% 		\cmidrule(r){4-6}\cmidrule(r){7-8}
-% 		$\zeta$ & alg. 1                     & alg. 2  & $\alpha= 1.5$              & $\alpha= 2$                              & $\alpha= 3$ & $\beta = 0.1$ & $\beta = -0.1$ \\
-% 		\midrule
-% 		0       & 8.3250                     & 1.45305 & 7.5791                     & 14.8517                                  & 20.0028     & 1.16396       & 1.1365         \\
-% 		5       & 0.6111                     & 2.27126 & 6.9952                     & 13.8560                                  & 18.6064     & 1.18659       & 1.1630         \\
-% 		10      & 11.6126                    & 2.69218 & 6.2520                     & 12.5202                                  & 16.8278     & 1.23180       & 1.2045         \\
-% 		15      & 0.5665                     & 2.95046 & 5.7753                     & 11.4588                                  & 15.4837     & 1.25131       & 1.2614         \\
-% 		20      & 15.8728                    & 3.07225 & 5.3071                     & 10.3935                                  & 13.8738     & 1.25307       & 1.2217         \\
-% 		25      & 0.9791                     & 3.19034 & 5.4575                     & 9.9533                                   & 13.0721     & 1.27104       & 1.2640         \\
-% 		30      & 2.0228                     & 3.27474 & 5.7461                     & 9.7164                                   & 12.2637     & 1.33404       & 1.3209         \\
-% 		35      & 13.4210                    & 3.36086 & 6.6735                     & 10.0442                                  & 12.0270     & 1.35385       & 1.3059         \\
-% 		40      & 13.2226                    & 3.36420 & 7.7248                     & 10.4495                                  & 12.0379     & 1.34919       & 1.2768         \\
-% 		45      & 12.8445                    & 3.47436 & 8.5539                     & 10.8552                                  & 12.2773     & 1.42303       & 1.4362         \\
-% 		50      & 12.9245                    & 3.58228 & 9.2702                     & 11.2183                                  & 12.3990     & 1.40922       & 1.3724         \\
-% 		\bottomrule
-% 	\end{tabular}
-% \end{table}
-
-
-%\chapter{[Przedmiot pracy]}
-%
-%\begin{itemize}
-%\item  Jak ja rozwiązuję problem?
-%\begin{itemize}
-%\item rozwiązanie zaproponowane przez dyplomanta
-%\item analiza teoretyczna rozwiązania
-%\item uzasadnienie wyboru zastosowanych metod, algorytmów, narzędzi
-%\end{itemize}
-%\end{itemize}
-
-
-% TODO
-%
-% 
-%
-%Rozdział przedstawia przeprowadzone badania. Jest to zasadnicza część i~musi wyraźnie dominować w~pracy.
-%Badania i analizę wyników należy przeprowadzić, tak jak jest przyjęte w środowisku naukowym (na przykład korzystanie z danych benchmarkowych, walidacja krzyżowa, zapewnienie powtarzalności testów itd). 
-%
-%\section{Metodyka badań}
-%
-%\begin{itemize}
-%\item opis metodyki badań
-%\item opis stanowiska badawczego (opis interfejsu aplikacji badawczych -- w~załączniku)
-%\end{itemize}
-%
-%
-%\section{Zbiory danych}
-%
-%\begin{itemize}
-%\item opis danych
-%\end{itemize}
-%
-%
-%\section{Wyniki}
-%
-%\begin{itemize}
-%\item prezentacja wyników, opracowanie i poszerzona dyskusja  wyników, wnioski
-%\end{itemize}
-%
-% 
-%\begin{table}
-%\centering
-%\caption{Opis tabeli nad nią.}
-%\label{id:tab:wyniki}
-%\begin{tabular}{rrrrrrrr}
-%\toprule
-%	         &                                     \multicolumn{7}{c}{metoda}                                      \\
-%	         \cmidrule{2-8}
-%	         &         &         &        \multicolumn{3}{c}{alg. 3}        & \multicolumn{2}{c}{alg. 4, $\gamma = 2$} \\
-%	         \cmidrule(r){4-6}\cmidrule(r){7-8}
-%	$\zeta$ &     alg. 1 &   alg. 2 & $\alpha= 1.5$ & $\alpha= 2$ & $\alpha= 3$ &   $\beta = 0.1$  &   $\beta = -0.1$ \\
-%\midrule
-%	       0 &  8.3250 & 1.45305 &       7.5791 &    14.8517 &    20.0028 & 1.16396 &                       1.1365 \\
-%	       5 &  0.6111 & 2.27126 &       6.9952 &    13.8560 &    18.6064 & 1.18659 &                       1.1630 \\
-%	      10 & 11.6126 & 2.69218 &       6.2520 &    12.5202 &    16.8278 & 1.23180 &                       1.2045 \\
-%	      15 &  0.5665 & 2.95046 &       5.7753 &    11.4588 &    15.4837 & 1.25131 &                       1.2614 \\
-%	      20 & 15.8728 & 3.07225 &       5.3071 &    10.3935 &    13.8738 & 1.25307 &                       1.2217 \\
-%	      25 &  0.9791 & 3.19034 &       5.4575 &     9.9533 &    13.0721 & 1.27104 &                       1.2640 \\
-%	      30 &  2.0228 & 3.27474 &       5.7461 &     9.7164 &    12.2637 & 1.33404 &                       1.3209 \\
-%	      35 & 13.4210 & 3.36086 &       6.6735 &    10.0442 &    12.0270 & 1.35385 &                       1.3059 \\
-%	      40 & 13.2226 & 3.36420 &       7.7248 &    10.4495 &    12.0379 & 1.34919 &                       1.2768 \\
-%	      45 & 12.8445 & 3.47436 &       8.5539 &    10.8552 &    12.2773 & 1.42303 &                       1.4362 \\
-%	      50 & 12.9245 & 3.58228 &       9.2702 &    11.2183 &    12.3990 & 1.40922 &                       1.3724 \\
-%\bottomrule
-%\end{tabular}
-%\end{table}  
-%
-%
-% 
-%\begin{figure}
-%\centering
-%\begin{tikzpicture}
-%\begin{axis}[
-%    y tick label style={
-%        /pgf/number format/.cd,
-%            fixed,   % po zakomentowaniu os rzednych jest indeksowana wykladniczo
-%            fixed zerofill, % 1.0 zamiast 1
-%            precision=1,
-%        /tikz/.cd
-%    },
-%    x tick label style={
-%        /pgf/number format/.cd,
-%            fixed,
-%            fixed zerofill,
-%            precision=2,
-%        /tikz/.cd
-%    }
-%]
-%\addplot [domain=0.0:0.1] {rnd};
-%\end{axis} 
-%\end{tikzpicture}
-%\caption{Podpis rysunku po rysunkiem.}
-%\label{fig:2}
-%\end{figure}
-%
-%
-%\begin{figure}
-%\begin{lstlisting}
-%if (_nClusters < 1)
-%	throw std::string ("unknown number of clusters");
-%if (_nIterations < 1 and _epsilon < 0)
-%	throw std::string ("You should set a maximal number of iteration or minimal difference -- epsilon.");
-%if (_nIterations > 0 and _epsilon > 0)
-%	throw std::string ("Both number of iterations and minimal epsilon set -- you should set either number of iterations or minimal epsilon.");
-%\end{lstlisting}
-%\caption{Przykład pseudokodu}
-%\end{figure}
-
-
-% TODO
+\subsubsection{Nauka cechowa}
+Wszystkie klasyfikatory uzyskały wyższe wyniki w uczeniu cechowym przy zastosowaniu walidacji krzyżowej k-fold w porównaniu z walidacją metodą Holdout. Modele boostingowe osiągnęły najwyższe wartości funkcji celu w obu rodzajach walidacji: 0.86 w przypadku k-fold oraz 0.69 dla Holdout. Naiwny klasyfikator Bayesa charakteryzował się w obu przypadkach bardzo niską swoistością; jednak przy walidacji Holdout uzyskał on istotnie wyższe wartości wszystkich miar niż przy walidacji k-fold. Metoda k-najbliższych sąsiadów w obu metodach walidacji osiągała wysokie wartości funkcji celu, choć nie plasowała się na pierwszym miejscu pod tym względem. Modele SVM oraz LS-SVM uzyskały wyniki pośrednie w porównaniu z pozostałymi klasyfikatorami. Drzewo decyzyjne oraz las losowy osiągnęły wysokie wyniki w walidacji k-fold, jednak w przypadku walidacji Holdout ich efektywność była znacząco niższa niż w przypadku pozostałych modeli.\\
 
 
 
-%\begin{itemize}
-%\item Jaki problem rozwiązałæm?
-%\item Jak ten problem rozwiązałæm?
-%\item Jakie są dobre i słabe strony mojego rozwiązania?
-%\item Czy mogę sformułować jakieś rekomendacje?
-%\end{itemize}
+\subsubsection{Nauka bezcechowa}
+W przypadku uczenia bezcechowego, niezależnie od zastosowanej architektury sieci oraz metody treningu, najwyższe wartości funkcji celu uzyskiwały sieci gęste w treningu cechowym, osiągając jednocześnie najwyższe wartości wskaźnika AUC. W każdej z analizowanych metod sieci gęste oraz sieci konwolucyjne wykazywały najlepsze wyniki spośród testowanych architektur osiągając wartość AUC równą 0.85. Dodanie warstw LSTM w obu podejściach istotnie obniżało zdolność modeli do poprawnej klasyfikacji. W przypadku walidacji metodą Holdout krzywe ROC miały wyraźnie mniej korzystny przebieg oraz charakteryzowały się niższymi wartościami AUC.\\
 
-\begin{itemize}
-	\item syntetyczny opis wykonanych prac
-	\item wnioski
-	\item możliwość rozwoju, kontynuacji prac, potencjalne nowe kierunki
-	\item Czy cel pracy zrealizowany?
-\end{itemize}
+W kolejnych etapach prac istotne będzie zbadanie wpływu długości okna czasowego na predykcje. Wydłużenie okna może dostarczyć klasyfikatorom więcej informacji, zwiększając ich wariację, ale znacząco zmniejszając obciążenie.
 
 
+\subsubsection{Optymalizacji hiperparametrów}
+W przypadku walidacji k-fold wartość funkcji celu na zbiorze walidacyjnym była istotnie wyższa niż w metodzie Holdout. Ponadto, pomimo identycznych zakresów przeszukiwanych parametrów oraz zastosowania tej samej metody optymalizacji, eksperymenty wyłoniły znacząco odmienne zestawy parametrów. Żadna z wartości kategorycznych nie była wspólna dla obu metod, a wartości numeryczne różniły się od siebie w sposób istotny.\newline
+
+\begin{table}[!h]
+	\centering
+	\caption{Zmiany wartości miar jakościowych po optymlizacji dla walidacji Holdout}
+	\label{k-fold_cechowa_opty}
+	\resizebox{\textwidth}{!}{
+		\begin{tabular}{@{}>{\centering\arraybackslash}m{3.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}@{}}
+			\toprule
+			             & \textbf{Dokładność} & \textbf{Spec} & \textbf{F-miara} & \textbf{nMCC} & \textbf{FC} \\
+			\midrule
+			\textbf{KNN} & \textbf{+ 0.18}     & + 0.22        & \textbf{+ 0.15}  & + 0.19        & + 0.17      \\
+			\textbf{\makecell{Drzewo                                                                            \\Decyzyjne}} & + 0.14     & + 0.34 & + 0.08  & + 0.16 & + 0.17 \\
+			\textbf{\makecell{Las                                                                               \\Losowy}} & + 0.17      & \textbf{+ 0.68} & + 0.02  & \textbf{+ 0.22} & \textbf{+ 0.26} \\
+			\textbf{SVM} & + 0.11              & + 0.24        & + 0.07           & + 0.11        & + 0.13      \\
+			\bottomrule
+		\end{tabular}
+	}
+\end{table}
+
+W przypadku metody Holdout optymalizacja hiperparametrów istotnie poprawiła jakość predykcji uzyskiwaną przez klasyfikatory. W skrajnym przypadku lasu losowego, klasyfikator, który początkowo nie był w stanie rozróżnić sygnałów osób chorych od zdrowych, zwiększył swoistość o 0.68 punktu oraz wartość funkcji celu o 0.26. Dla pozostałych klasyfikatorów proces optymalizacji nie spowodował pogorszenia żadnej z ocenianych metryk jakości. Najmniejszą poprawę odnotowano dla miary F w modelu SVM, gdzie wzrost wyniósł jedynie 0.07 punktu procentowego, natomiast wartość funkcji celu w tym modelu zwiększyła się o 0.13 punktu procentowego. W przypadku klasyfikatorów KNN oraz drzewa decyzyjnego wartość funkcji celu wzrosła o 0.17, przy jednoczesnym znaczącym wzroście swoistości i wskaźnika nMCC.\\
+
+
+\begin{table}[!h]
+	\centering
+	\caption{Zmiany średnich wartości miar jakościowych po optymlizacji dla metody k-fold}
+	\label{k-fold_cechowa_opty_pods}
+	\resizebox{\textwidth}{!}{
+		\begin{tabular}{@{}>{\centering\arraybackslash}m{3.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}
+			>{\centering\arraybackslash}m{2.5cm}@{}}
+			\toprule
+			             & \textbf{Dokładność} & \textbf{Spec}   & \textbf{F-miara}    & \textbf{nMCC}       & \textbf{FC}     \\
+			\midrule
+			\textbf{KNN} & $\pm$ 0.00          & - 0.01          & $\pm$ \textbf{0.00} & $\pm$ \textbf{0.00} & $\pm$ 0.00      \\
+			\textbf{\makecell{Drzewo                                                                                           \\Decyzyjne}} & $\pm$ 0.00  & $\pm$ 0.00  & \textbf{$\pm$ 0.00}  & \textbf{$\pm$ 0.00}  & + 0.01  \\
+			\textbf{\makecell{Las                                                                                              \\Losowy}} & \textbf{+ 0.02} & + 0.06 & - 0.02 & - 0.03 & \textbf{+ 0.03}\\
+			\textbf{SVM} & \textbf{+ 0.02}     & \textbf{+ 0.10} & - 0.01              & - 0.02              & \textbf{+ 0.03} \\
+			\bottomrule
+		\end{tabular}
+	}
+\end{table}
+
+\newpage
+Optymalizacja przeprowadzona dla walidacji krzyżowej k-fold nie przyniosła tak wyraźnych rezultatów jak w przypadku walidacji Holdout. Analiza tabeli~\ref{k-fold_cechowa_opty_pods} wskazuje, że dla metody najbliższych sąsiadów odnotowano spadek swoistości o 0.01, przy braku zmian w pozostałych miarach. Największy efekt optymalizacji zaobserwowano w przypadku lasu losowego oraz SVM -- w obu tych modelach wartość funkcji celu, swoistości i dokładności wzrosła o 0.03, przy jednoczesnym spadku wartości nMCC oraz F-miary. Oznacza to, że modele te znacząco lepiej radzą sobie z klasyfikacją osób zdrowych. We wszystkich klasyfikatorach odnotowano także zmniejszenie odchylenia standardowego, niezależnie od wybranej metryki.\\
+
+Znaczące różnice w miarach jakościowych pomiędzy zastosowanymi metodami walidacji mogą wynikać z odmienności aparatury pomiarowej oraz procedur zbierania danych. Niestety, wykorzystane zbiory danych nie zawierają informacji o lokalizacji na ciele, z której pozyskiwano sygnał PPG, ani o rodzaju aparatury użytej do pomiarów. W przypadku walidacji metodą Holdout, która charakteryzowała się niższymi wynikami, modele nie miały dostępu do sygnałów pochodzących ze zbioru MIMIC, w przeciwieństwie do walidacji krzyżowej k-fold, w której klasyfikatory mogły korzystać z wybranych próbek pochodzących z różnych zbiorów danych.\\
+
+
+Istotnym zagadnieniem, które nie zostało poddane analizie w niniejszej pracy, jest wpływ optymalizacji hiperparametrów sieci neuronowych. Modele te charakteryzują się znacząco większą liczbą hiperparametrów niż inne algorytmy, co istotnie utrudnia proces przeszukiwania przestrzeni parametrów. Dodatkowym wyzwaniem jest wysoki koszt obliczeniowy tego procesu -- wraz ze wzrostem złożoności architektury rośnie liczba parametrów, których wartości muszą zostać wyznaczone przez optymalizator.\\
+
+Niewielki przyrost jakości klasyfikacji obserwowany podczas optymalizacji hiperparametrów w walidacji k-fold może wskazywać na niewystarczającą reprezentatywność zastosowanego wektora cech. W kolejnych etapach badań wskazane będzie dostosowanie tego wektora, co wymagać będzie analizy istotności poszczególnych cech z wykorzystaniem różnych technik inżynierii cech oraz metod wyjaśnialnej sztucznej inteligencji.\\
+
+Ważnym elementem przyszłych badań powinno być zbadanie, czy zmiana sygnału PPG na EKG pozytywnie wpłynie na miary jakościowe modeli. Oba te sygnały są zależne od pracy serca, jednak różnią się one charakterystyką.\\
+
+Warto rozważyć przeprowadzenie analizy jakości klasyfikacji osobno dla każdego typu arytmii. W niniejszej pracy wszystkie typy arytmii były oceniane łącznie, co mogło prowadzić do ukrycia istotnych informacji związanych z predykcją poszczególnych klas.
+
+
+
+
+%  
 
 \backmatter
 
@@ -1827,35 +1960,80 @@ Analiza krzywych ROC przedstawionych na rysunku \ref{roc_bezcech} potwierdza wcz
 
 \begin{appendices}
 
-	% TODO
 
 
-	% TODO
 	\chapter{Spis skrótów i symboli}
 
 	\begin{itemize}
-		\item[PPG] Sygnał fotopletyzmograficzny
-		\item[$\bar{x}$] Średnia wartość sygnału
-		\item[$\sigma$] Odchylenie standardowe
-		\item[H] Entropie Shannona
-		\item[E] Energia
-		\item[RMSSD] Pierwiastek średniokwadratowy różnic
-		\item[kurt] Kurtoza widma
-		\item[MVC] model -- widok -- kontroler (ang. \english{model--view--controller})
-		\item[$\mu$] stopnień przyleżności do zbioru
-		\item[$\mathbb{E}$] zbiór krawędzi grafu
-		\item[$\mathcal{L}$] transformata Laplace'a
+		\item[PPG] Sygnał fotopletyzmograficzny,
+		\item[EKG] sygnał elektrokardiograficzn,
+		\item [$\mathbf{x}$]  wektor cech opisujących próbkę,
+		\item [$C_k$]  klasa, do której próbka może należeć,
+		\item [$P(C_k \mid \mathbf{x})$]  prawdopodobieństwo warunkowe, że próbka o cechach $\mathbf{x}$ należy do klasy $C_k$,
+		\item [$P(\mathbf{x} \mid C_k)$]  prawdopodobieństwo warunkowe zaobserwowania cech $\mathbf{x}$, pod warunkiem, że próbka należy do klasy $C_k$,
+		\item [$P(C_k)$]  prawdopodobieństwo wystąpienia klasy $C_k$,
+		\item [$P(\mathbf{x})$]  całkowite prawdopodobieństwo wystąpienia cech $\mathbf{x}$,
+		\item[KNN] metoda K najbliższych sąsiadów (ang. \english{k--nearest neighbors}),
+		\item[SVM] maszyna wektorów nośnych (ang. \english{Support vector machine}),
+		\item[LS-SVM] maszyna wektorów nośnych najmniejszych kwadratów (ang. \english{Least-squares support vector machine}),
+		\item [$K(\mathbf{x}_1, \mathbf{x}_2)$] funkcja jądra,
+		\item [$\mathbf{x}_1, \mathbf{x}_2$] wektory cech,
+		\item [$\gamma$] parametr kontrolujący wpływ pojedyńczej próbki na granice decyzyjną,
+		\item [$r$] wyraz wolny, opiswany przez parametr \textit{coef0}.
+		\item [$d$] stopień wielomianu.
+		\item [$y$] sygnał wyjściowy,
+		\item [$f(\cdot)$]  funkcja aktywacji,
+		\item [N] liczba wejść,
+		\item [$x_i$] sygnał wejściowy dla $i$-tego wejścia,
+		\item [$w_i$] waga przypisana do $i$-tego sygnału wejściowego,
+		\item [b] składnik stały,
+		\item [CNN] splotowe sieci neuronowe (ang. \english{Convolutional Neural Network})
+		\item [LSTM] długa pamięć krótkotrwała (ang. \english{Long Short-Term Memory}),
+		\item [TP] przypadek prawdziwie pozytywny (ang. \english{True Positive}),
+		\item [FP] przypadek fałszwie pozytywny (ang. \english{False Positiv}),
+		\item [TN] przypadek prawdziwie negatywny (ang. \english{True Negative}),
+		\item [FN] przypadek fałszywie negatywny (ang. \english{False Negative}),
+		\item [Acc] dokładność (ang. \english{Accuracy}),
+		\item [Prec] precyzja (ang. \english{temp}),
+		\item [Spec] swoistość (ang. \english{temp}),
+		\item [Rec] czułość (ang. \english{temp}),
+		\item [$F_1$] f-miara (ang. \english{temp}),
+		\item [MCC] współczynnika korelacji Matthews'a,
+		\item [nMCC] znormalizowany współczynnika korelacji Matthews'a,
+		\item [ROC] krzywa charakterystyki operacyjnej odbiornika,
+		\item [AUC] pole pod wykresem,
+		\item [FC] funkcja celu,
+		\item [ $\bar{x}$]  średnia arytmetyczna,
+		\item [ $\sigma$]  odchylenie standardowe sygnału,
+		\item [N]  liczba próbek w wektorze sygnału,
+		\item [CV] współczynnik zmienności,
+		\item [MAD] średnie odchylenie bezwzględne,
+		\item [H] Entropia shannona
+		\item [$p_i$] prawdopodobieństwo wystąpienia  $i$-tej wartości sygnału, wyliczane przy pomocy histogramu,
+		\item [$\delta(\cdot)$] funkcja wskaźnikowa,
+		\item [RMSSD] pierwiastek średniokwadratowy różnic.
+		      % \item [$P_{xx}(f)$]
+		\item [f] częstotliwość,
+		\item [M] liczba punktów w widmie,
+		\item [E] energia spektralna,
+		\item [ADAM] adaptacyjne oszacowanie momentów (ang. \english{Adaptive Moment Estimation}),
+		\item [N]  liczba próbek w zbiorze,
+		\item [$y_i$]  prawdziwa etykieta $i$-tej próbki,
+		\item [$\hat{y}_i$]  prawdopodobieństwo przypisane klasie pozytywnej dla $i$-tej próbki.
+		\item [$\alpha$]  krok uczenia,
+		\item [$\alpha_0$]  początkowy krok uczenia,
+		\item [$j$]  aktulna iteracja.
+		\item [TPR] odsetek trafnych pozytywnych (ang. \english{True Positive Rate})
+		\item [FPR] odsetek fałszywie pozytywnych (ang. \english{False Positive Rate})
+		\item [FIR] filtra o skończonej odpowiedzi impulsowej (ang. \english{Finite Impulse Response})
 	\end{itemize}
 
-	% TODO
 	\chapter{Lista dodatkowych plików, uzupełniających tekst pracy}
 
-	W systemie do pracy dołączono dodatkowe pliki zawierające:
 	\begin{itemize}
-		\item źródła programu,
-		\item zbiory danych użyte w~eksperymentach,
-		\item film pokazujący działanie opracowanego oprogramowania lub zaprojektowanego i wykonanego urządzenia,
-		\item itp.
+		\item Dane.zip -- archiwum zawierające dane wykorzystane do nauki modeli klasyfikacyjnych,
+		\item Skrypty\_nauka\_modeli.zip -- archiwum ze skryptami w formacie .IPYNB służącymi do trenowania modeli we wszystkich konfiguracjach,
+		\item Skrypty\_wstepne\_przetwarzanie.zip -- archiwum z plikami MATLAB służącymi do wstępnego przetwarzania danych.
 	\end{itemize}
 
 

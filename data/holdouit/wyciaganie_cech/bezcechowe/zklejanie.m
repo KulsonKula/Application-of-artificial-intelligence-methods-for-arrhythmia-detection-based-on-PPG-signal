@@ -9,8 +9,8 @@ repo=readmatrix("../repo.csv");
 psynet_af=readmatrix("../psynet_af.csv");
 psynet_nonaf=readmatrix("../psynet_nonaf.csv");
 
-train_dataset=[symulator;repo;mimic_nonaf;mimic_af];
-test_dataset=[psynet_af;psynet_nonaf];
+train_dataset=[symulator;repo;psynet_af;psynet_nonaf];
+test_dataset=[mimic_af;mimic_nonaf];
 
 train_dataset=rmmissing(train_dataset);
 test_dataset=rmmissing(test_dataset);
